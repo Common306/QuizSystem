@@ -7,8 +7,8 @@ namespace QuizSystemApi.Models
     {
         public User()
         {
-            Quizzes = new HashSet<Quiz>();
-            TakeQuizzes = new HashSet<TakeQuiz>();
+            //Quizzes = new HashSet<Quiz>();
+            //TakeQuizzes = new HashSet<TakeQuiz>();
         }
 
         public int UserId { get; set; }
@@ -21,8 +21,8 @@ namespace QuizSystemApi.Models
         public DateTime? UpdateAt { get; set; }
         public bool? IsEnable { get; set; }
 
-        public virtual Role Role { get; set; } = null!;
-        public virtual ICollection<Quiz> Quizzes { get; set; }
-        public virtual ICollection<TakeQuiz> TakeQuizzes { get; set; }
+        public virtual Role? Role { get; set; } = null!;
+        //public virtual ICollection<Quiz> Quizzes { get; set; }
+        //public virtual ICollection<TakeQuiz> TakeQuizzes { get; set; }
     }
 }

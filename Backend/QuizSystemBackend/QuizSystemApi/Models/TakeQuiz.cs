@@ -7,7 +7,7 @@ namespace QuizSystemApi.Models
     {
         public TakeQuiz()
         {
-            TakeAnswers = new HashSet<TakeAnswer>();
+            //TakeAnswers = new HashSet<TakeAnswer>();
         }
 
         public int TakeQuizId { get; set; }
@@ -19,6 +19,6 @@ namespace QuizSystemApi.Models
 
         public virtual Quiz? Quiz { get; set; }
         public virtual User? User { get; set; }
-        public virtual ICollection<TakeAnswer> TakeAnswers { get; set; }
+        //public virtual ICollection<TakeAnswer> TakeAnswers { get; set; }
     }
 }

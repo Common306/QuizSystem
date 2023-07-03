@@ -44,10 +44,10 @@ namespace QuizSystemApi.Models
 
                 entity.Property(e => e.Content).HasMaxLength(500);
 
-                entity.HasOne(d => d.Question)
-                    .WithMany(p => p.Answers)
-                    .HasForeignKey(d => d.QuestionId)
-                    .HasConstraintName("FK_Answer_Question");
+                //entity.HasOne(d => d.Question)
+                //    .WithMany(p => p.Answers)
+                //    .HasForeignKey(d => d.QuestionId)
+                //    .HasConstraintName("FK_Answer_Question");
             });
 
             modelBuilder.Entity<Question>(entity =>
@@ -56,10 +56,10 @@ namespace QuizSystemApi.Models
 
                 entity.Property(e => e.Content).HasMaxLength(500);
 
-                entity.HasOne(d => d.Quiz)
-                    .WithMany(p => p.Questions)
-                    .HasForeignKey(d => d.QuizId)
-                    .HasConstraintName("FK_Question_Quiz");
+                //entity.HasOne(d => d.Quiz)
+                //    .WithMany(p => p.Questions)
+                //    .HasForeignKey(d => d.QuizId)
+                //    .HasConstraintName("FK_Question_Quiz");
             });
 
             modelBuilder.Entity<Quiz>(entity =>
@@ -76,10 +76,10 @@ namespace QuizSystemApi.Models
 
                 entity.Property(e => e.Title).HasMaxLength(250);
 
-                entity.HasOne(d => d.Creator)
-                    .WithMany(p => p.Quizzes)
-                    .HasForeignKey(d => d.CreatorId)
-                    .HasConstraintName("FK_Quiz_User");
+                //entity.HasOne(d => d.Creator)
+                //    .WithMany(p => p.Quizzes)
+                //    .HasForeignKey(d => d.CreatorId)
+                //    .HasConstraintName("FK_Quiz_User");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -97,17 +97,17 @@ namespace QuizSystemApi.Models
 
                 entity.ToTable("TakeAnswer");
 
-                entity.HasOne(d => d.Answer)
-                    .WithMany(p => p.TakeAnswers)
-                    .HasForeignKey(d => d.AnswerId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TakeAnswer_Answer");
+                //entity.HasOne(d => d.Answer)
+                //    .WithMany(p => p.TakeAnswers)
+                //    .HasForeignKey(d => d.AnswerId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("FK_TakeAnswer_Answer");
 
-                entity.HasOne(d => d.TakeQuiz)
-                    .WithMany(p => p.TakeAnswers)
-                    .HasForeignKey(d => d.TakeQuizId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_TakeAnswer_TakeQuiz");
+                //entity.HasOne(d => d.TakeQuiz)
+                //    .WithMany(p => p.TakeAnswers)
+                //    .HasForeignKey(d => d.TakeQuizId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("FK_TakeAnswer_TakeQuiz");
             });
 
             modelBuilder.Entity<TakeQuiz>(entity =>
@@ -118,15 +118,15 @@ namespace QuizSystemApi.Models
 
                 entity.Property(e => e.StartAt).HasColumnType("datetime");
 
-                entity.HasOne(d => d.Quiz)
-                    .WithMany(p => p.TakeQuizzes)
-                    .HasForeignKey(d => d.QuizId)
-                    .HasConstraintName("FK_TakeQuiz_Quiz");
+                //entity.HasOne(d => d.Quiz)
+                //    .WithMany(p => p.TakeQuizzes)
+                //    .HasForeignKey(d => d.QuizId)
+                //    .HasConstraintName("FK_TakeQuiz_Quiz");
 
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.TakeQuizzes)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_TakeQuiz_User");
+                //entity.HasOne(d => d.User)
+                //    .WithMany(p => p.TakeQuizzes)
+                //    .HasForeignKey(d => d.UserId)
+                //    .HasConstraintName("FK_TakeQuiz_User");
             });
 
             modelBuilder.Entity<User>(entity =>
@@ -145,11 +145,11 @@ namespace QuizSystemApi.Models
 
                 entity.Property(e => e.Username).HasMaxLength(50);
 
-                entity.HasOne(d => d.Role)
-                    .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.RoleId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK_User_Role");
+                //entity.HasOne(d => d.Role)
+                //    .WithMany(p => p.Users)
+                //    .HasForeignKey(d => d.RoleId)
+                //    .OnDelete(DeleteBehavior.ClientSetNull)
+                //    .HasConstraintName("FK_User_Role");
             });
 
             OnModelCreatingPartial(modelBuilder);
