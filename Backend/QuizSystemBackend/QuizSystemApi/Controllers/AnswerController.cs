@@ -1,11 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using QuizSystemApi.Models;
 using QuizSystemApi.Repository.IRepository;
+using System.Data;
 
 namespace QuizSystemApi.Controllers
 {
     [ApiController]
     [Route("api/answer")]
+    [Authorize(Roles = "Admin, Teacher")]
     public class AnswerController : Controller
     {
 

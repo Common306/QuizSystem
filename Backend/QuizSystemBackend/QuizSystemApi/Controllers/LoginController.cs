@@ -66,7 +66,9 @@ namespace QuizSystemApi.Controllers
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
+                new Claim("UserId", user.UserId.ToString()),
                 new Claim("Username", user.Username),
+                new Claim("RoleId", user.RoleId.ToString()),
                 new Claim(ClaimTypes.Role, user.Role.RoleName),
                 new Claim("Fullname", user.FullName ?? ""),
                 new Claim("PhoneNumber", user.PhoneNumber ?? ""),

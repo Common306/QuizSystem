@@ -1,4 +1,5 @@
-﻿using QuizSystemApi.Dao;
+﻿using Microsoft.AspNetCore.Authorization;
+using QuizSystemApi.Dao;
 using QuizSystemApi.Dto.Request;
 using QuizSystemApi.Models;
 using QuizSystemApi.Repository.IRepository;
@@ -16,7 +17,6 @@ namespace QuizSystemApi.Repository
             };
             return UserDao.Login(userlogin);
         }
-
         public User? Register(RegisterDtoRequest request)
         {
             User userRegister = new User
@@ -42,27 +42,22 @@ namespace QuizSystemApi.Repository
             userRegister.Role = role;
             return userRegister;
         }
-
         public List<User> GetAll()
         {
             return UserDao.GetAll();
         }
-
         public User Create(User user)
         {
             return UserDao.Create(user);
         }
-
         public User Update(int id, User user)
         {
             return UserDao.Update(id, user);
         }
-
         public bool Delete(int id)
         {
             return UserDao.Delete(id);
         }
-
         public User Get(int id)
         {
             return UserDao.Get(id);

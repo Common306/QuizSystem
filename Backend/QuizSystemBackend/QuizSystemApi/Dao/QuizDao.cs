@@ -5,14 +5,15 @@ namespace QuizSystemApi.Dao
 {
     public class QuizDao
     {
-        public static List<Quiz> GetAll()
+        public static List<Quiz> GetAll(User user)
         {
             try
             {
                 using (var context = new DBContext())
                 {
-                    List<Quiz> users = context.Quizzes.Include(x => x.Creator).ToList();
-                    return users;
+                    List<Quiz> quizzes = context.Quizzes.Include(x => x.Creator)
+                        .Where(x => user.RoleId == 1 || x.CreatorId == user.UserId).ToList();
+                    return quizzes;
                 }
             }
             catch (Exception ex)
@@ -21,13 +22,15 @@ namespace QuizSystemApi.Dao
             }
         }
 
-        public static Quiz Get(int id)
+        public static Quiz Get(int id, User user)
         {
             try
             {
                 using (var context = new DBContext())
                 {
-                    Quiz? quiz = context.Quizzes.Include(x => x.Creator).FirstOrDefault(x => x.QuizId == id);
+                    Quiz? quiz = context.Quizzes.Include(x => x.Creator)
+                        .Where(x => user.RoleId == 1 || x.CreatorId == user.UserId)
+                        .FirstOrDefault(x => x.QuizId == id);
                     return quiz;
                 }
             }
@@ -54,13 +57,14 @@ namespace QuizSystemApi.Dao
             }
         }
 
-        public static Quiz Update(int id, Quiz updateQuiz)
+        public static Quiz Update(int id, Quiz updateQuiz, User user)
         {
             try
             {
                 using (var context = new DBContext())
                 {
-                    Quiz? quiz = context.Quizzes.FirstOrDefault(x => x.QuizId == id);
+                    Quiz? quiz = context.Quizzes.Include(x => x.Creator)
+                        .FirstOrDefault(x => x.QuizId == id && (user.RoleId == 1 || x.CreatorId == user.UserId));
                     if (quiz == null)
                     {
                         return null;
@@ -82,13 +86,14 @@ namespace QuizSystemApi.Dao
             }
         }
 
-        public static bool Delete(int id)
+        public static bool Delete(int id, User user)
         {
             try
             {
                 using (var context = new DBContext())
                 {
-                    Quiz? quiz = context.Quizzes.FirstOrDefault(x => x.QuizId == id);
+                    Quiz? quiz = context.Quizzes.
+                        FirstOrDefault(x => x.QuizId == id && (user.RoleId == 1 || x.CreatorId == user.UserId));
                     if (quiz == null)
                     {
                         return false;

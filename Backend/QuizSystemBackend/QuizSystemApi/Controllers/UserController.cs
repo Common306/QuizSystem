@@ -3,11 +3,13 @@ using QuizSystemApi.Models;
 using QuizSystemApi.Repository.IRepository;
 using System.Text.Json.Serialization;
 using System.Text.Json;
+using Microsoft.AspNetCore.Authorization;
 
 namespace QuizSystemApi.Controllers
 {
     [ApiController]
     [Route("api/user")]
+    [Authorize(Roles = "Admin")]
     public class UserController : Controller
     {
         private readonly IUserRepository _userRepository;

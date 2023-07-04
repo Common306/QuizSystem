@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using QuizSystemApi.Models;
 using QuizSystemApi.Repository;
 using QuizSystemApi.Repository.IRepository;
+using System.Data;
 
 namespace QuizSystemApi.Controllers
 {
     [ApiController]
     [Route("api/quiz")]
+    [Authorize(Roles = "Admin, Teacher")]
     public class QuizController : Controller
     {
         private readonly IQuizRepository _quizRepository;
@@ -18,7 +21,8 @@ namespace QuizSystemApi.Controllers
 
         [HttpGet]
         public IActionResult GetAll() {
-            List<Quiz> quizzes = _quizRepository.GetAll();
+            User user = TokenHelper.GetUserFromToken(HttpContext);
+            List<Quiz> quizzes = _quizRepository.GetAll(user);
             return Ok(quizzes);
         }
 
@@ -26,13 +30,16 @@ namespace QuizSystemApi.Controllers
         [Route("{id}")]
         public IActionResult Get(int id)
         {
-            Quiz quiz = _quizRepository.Get(id);
+            User user = TokenHelper.GetUserFromToken(HttpContext);
+            Quiz quiz = _quizRepository.Get(id, user);
             return Ok(quiz);
         }
 
         [HttpPost]
         public IActionResult Create(Quiz quiz)
         {
+            User user = TokenHelper.GetUserFromToken(HttpContext);
+            quiz.CreatorId = user.UserId;
             Quiz res = _quizRepository.Create(quiz);
             return Ok(res);
         }
@@ -41,7 +48,8 @@ namespace QuizSystemApi.Controllers
         [Route("{id}")]
         public IActionResult Update(int id, Quiz quiz)
         {
-            Quiz res = _quizRepository.Update(id, quiz);
+            User user = TokenHelper.GetUserFromToken(HttpContext);
+            Quiz res = _quizRepository.Update(id, quiz, user);
             return Ok(res);
         }
 
@@ -49,7 +57,8 @@ namespace QuizSystemApi.Controllers
         [Route("{id}")]
         public IActionResult Delete(int id)
         {
-            bool isSuccess = _quizRepository.Delete(id);
+            User user = TokenHelper.GetUserFromToken(HttpContext);
+            bool isSuccess = _quizRepository.Delete(id, user);
             if (!isSuccess)
             {
                 return BadRequest("Quiz is not exist");

@@ -5,13 +5,14 @@ namespace QuizSystemApi.Dao
 {
     public class QuestionDao
     {
-        public static List<Question> GetListByQuizId(int quizId)
+        public static List<Question> GetListByQuizId(int quizId, User user)
         {
             try
             {
                 using (var context = new DBContext())
                 {
-                    List<Question>? questions = context.Questions.Include(x => x.Quiz).Where(x => x.QuizId == quizId).ToList();
+                    List<Question>? questions = context.Questions.Include(x => x.Quiz)
+                        .Where(x => x.QuizId == quizId && (user.Role.RoleId == 1 || x.Quiz.CreatorId == user.UserId)).ToList();
                     return questions;
                 }
             }
@@ -38,13 +39,14 @@ namespace QuizSystemApi.Dao
             }
         }
 
-        public static Question Update(int id, Question updateQuestion)
+        public static Question Update(int id, Question updateQuestion, User user)
         {
             try
             {
                 using (var context = new DBContext())
                 {
-                    Question? question = context.Questions.FirstOrDefault(x => x.QuestionId == id);
+                    Question? question = context.Questions.Include(x => x.Quiz)
+                        .FirstOrDefault(x => x.QuestionId == id && (user.Role.RoleId == 1 || x.Quiz.CreatorId == user.UserId));
                     if (question == null)
                     {
                         return null;
@@ -63,13 +65,13 @@ namespace QuizSystemApi.Dao
             }
         }
 
-        public static bool Delete(int id)
+        public static bool Delete(int id, User user)
         {
             try
             {
                 using (var context = new DBContext())
                 {
-                    Question? question = context.Questions.FirstOrDefault(x => x.QuestionId == id);
+                    Question? question = context.Questions.FirstOrDefault(x => x.QuestionId == id && (user.Role.RoleId == 1 || x.Quiz.CreatorId == user.UserId));
                     if (question == null)
                     {
                         return false;

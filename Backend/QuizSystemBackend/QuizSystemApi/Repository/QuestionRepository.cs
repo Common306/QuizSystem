@@ -6,9 +6,9 @@ namespace QuizSystemApi.Repository
 {
     public class QuestionRepository : IQuestionRepository
     {
-        public List<Question> GetListByQuizId(int quizId)
+        public List<Question> GetListByQuizId(int quizId, User user)
         {
-            return QuestionDao.GetListByQuizId(quizId);
+            return QuestionDao.GetListByQuizId(quizId, user);
         }
 
         public Question Create(Question question)
@@ -16,14 +16,14 @@ namespace QuizSystemApi.Repository
             return QuestionDao.Create(question);
         }
 
-        public Question Update(int id, Question question)
+        public Question Update(int id, Question question, User user)
         {
-            return QuestionDao.Update(id, question);
+            return QuestionDao.Update(id, question, user);
         }
 
-        public bool Delete(int id)
+        public bool Delete(int id, User user)
         {
-            return QuestionDao.Delete(id);
+            return QuestionDao.Delete(id, user);
         }
     }
 }
