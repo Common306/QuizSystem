@@ -20,6 +20,7 @@ namespace QuizSystemApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            builder.Services.AddCors();
 
             //config repository
             builder.Services.AddTransient<IUserRepository, UserRepository>();
@@ -54,7 +55,12 @@ namespace QuizSystemApi
             }
 
             app.UseHttpsRedirection();
-
+            app.UseCors(builder =>
+            {
+                builder.AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
             //config jwt
             app.UseAuthentication();
 
