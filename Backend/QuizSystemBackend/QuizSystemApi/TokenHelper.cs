@@ -10,11 +10,6 @@ namespace QuizSystemApi
 {
     public class TokenHelper
     {
-        public static string GetTokenFromRequestHeader(HttpContext context, string headerName)
-        {
-            string token = context.Request.Headers[headerName].ToString();
-            return token;
-        }
 
         public static User GetUserFromToken(HttpContext context)
         {
