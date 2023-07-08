@@ -23,7 +23,7 @@ namespace QuizSystemApi.Repository
             {
                 Username = request.Username,
                 Password = request.Password,
-                RoleId = 3,
+                RoleId = request.RoleId,
                 FullName = request.FullName,
                 PhoneNumber = request.PhoneNumber,
                 CreateAt = DateTime.Now,
@@ -31,8 +31,8 @@ namespace QuizSystemApi.Repository
             };
             Role role = new Role()
             {
-                RoleId = 3,
-                RoleName = "Student"
+                RoleId = request.RoleId,
+                RoleName = (request.RoleId == 2) ? "Teacher" : "Student"
             };
             User? user = UserDao.Register(userRegister);
             if(user == null)
