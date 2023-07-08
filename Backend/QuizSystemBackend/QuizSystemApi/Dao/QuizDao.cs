@@ -45,7 +45,7 @@ namespace QuizSystemApi.Dao
             try
             {
                 using (var context = new DBContext())
-                {  
+                {
                     context.Quizzes.Add(quiz);
                     context.SaveChanges();
                     return quiz;
@@ -101,6 +101,22 @@ namespace QuizSystemApi.Dao
                     context.Quizzes.Remove(quiz);
                     context.SaveChanges();
                     return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public static List<Quiz> GetAllForStudent(User user)
+        {
+            try
+            {
+                using (var context = new DBContext())
+                {
+                    List<Quiz> quizzes = context.Quizzes.Include(x => x.Creator).Where(x => x.IsPublish == true).ToList();
+                    return quizzes;
                 }
             }
             catch (Exception ex)

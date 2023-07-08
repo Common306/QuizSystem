@@ -25,6 +25,14 @@ namespace QuizSystemApi.Controllers
             List<Quiz> quizzes = _quizRepository.GetAll(user);
             return Ok(quizzes);
         }
+        
+        [HttpGet("student")]
+        [AllowAnonymous]
+        public IActionResult GetAllForStudent() {
+            User user = TokenHelper.GetUserFromToken(HttpContext);
+            List<Quiz> quizzes = _quizRepository.GetAllForStudent(user);
+            return Ok(quizzes);
+        }
 
         [HttpGet]
         [Route("{id}")]

@@ -1,0 +1,59 @@
+﻿@model IEnumerable<QuizSystemWeb.Models.Quiz>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Title
+            </th>
+            <th>
+                Description
+            </th>
+            <th>
+                PassScore
+            </th>
+            <th>
+                Creator.FullName
+            </th>
+            <th>
+                StartAt
+            </th>
+            <th>
+                EndAt
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PassScore)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Creator.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartAt)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndAt)
+                </td>
+                <td>
+                    @*<a asp-controller="books" asp-action="edit" asp-route-id="@item.BookId">Edit</a> |
+                    @{
+                        var link = "https://localhost:7199/books/delete/" + item.BookId;
+                    }
+                    <a href=@link onClick="return confirm('Are you sure you want to delete this item?');">Delete</a>*@
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

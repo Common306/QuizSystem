@@ -21,7 +21,10 @@
 
   <ItemGroup>
     <Folder Include="Views\Question\" />
-    <Folder Include="Views\Quiz\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QuizSystemApi\QuizSystemApi.csproj" />
   </ItemGroup>
 
 </Project>

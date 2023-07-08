@@ -16,7 +16,7 @@ namespace QuizSystemWeb.Controllers
             client.DefaultRequestHeaders.Accept.Add(contentType);
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> QuizesStudent()
         {
             try
             {
@@ -26,7 +26,7 @@ namespace QuizSystemWeb.Controllers
                     return Unauthorized();
                 }
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                HttpResponseMessage response = await client.GetAsync(QuizApiUrl);
+                HttpResponseMessage response = await client.GetAsync(QuizApiUrl + "/student");
                 string strData = await response.Content.ReadAsStringAsync();
 
                 var options = new JsonSerializerOptions
@@ -40,7 +40,6 @@ namespace QuizSystemWeb.Controllers
             {
                 return Unauthorized();
             }
-
         }
     }
 }
