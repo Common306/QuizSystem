@@ -1,4 +1,4 @@
-﻿namespace QuizSystemApi.Dto.Request
+﻿namespace QuizSystemWeb.Dto.Request
 {
     public class LoginDtoRequest
     {

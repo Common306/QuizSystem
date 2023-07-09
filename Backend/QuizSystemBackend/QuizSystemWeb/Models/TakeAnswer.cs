@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 
 namespace QuizSystemWeb.Models
-
 {
     public partial class TakeAnswer
     {
@@ -10,7 +9,7 @@ namespace QuizSystemWeb.Models
         public int AnswerId { get; set; }
         public int? QuestionId { get; set; }
 
-        public virtual Answer Answer { get; set; } = null!;
-        public virtual TakeQuiz TakeQuiz { get; set; } = null!;
+        public virtual Answer? Answer { get; set; } = null!;
+        public virtual TakeQuiz? TakeQuiz { get; set; } = null!;
     }
 }

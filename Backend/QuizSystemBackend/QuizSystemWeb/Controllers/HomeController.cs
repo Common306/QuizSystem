@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using QuizSystemApi.Dto.Request;
-using QuizSystemApi.Dto.Response;
+using QuizSystemWeb.Dto.Request;
+using QuizSystemWeb.Dto.Response;
 using QuizSystemWeb.Models;
 using System.Diagnostics;
 using System.Net.Http.Headers;

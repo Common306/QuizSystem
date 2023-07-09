@@ -1,4 +1,4 @@
-﻿namespace QuizSystemApi.Dto.Response
+﻿namespace QuizSystemWeb.Dto.Response
 {
     public class LoginDtoResponse
     {

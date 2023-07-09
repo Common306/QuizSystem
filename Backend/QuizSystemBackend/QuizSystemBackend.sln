@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33627.172
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizSystemApi", "QuizSystemApi\QuizSystemApi.csproj", "{EB5C4C29-F0A9-4E0E-90C8-9E829F9C9377}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QuizSystemWeb", "QuizSystemWeb\QuizSystemWeb.csproj", "{0C764922-3480-43E6-99DD-71E2AE9AB0AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuizSystemWeb", "QuizSystemWeb\QuizSystemWeb.csproj", "{0C764922-3480-43E6-99DD-71E2AE9AB0AE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
