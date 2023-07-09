@@ -37,5 +37,22 @@ namespace QuizSystemApi.Dao
                 throw new Exception(ex.Message);
             }
         }
+
+        public static List<Answer> UpdateListAnswer(List<Answer> answers)
+        {
+            try
+            {
+                using (var context = new DBContext())
+                {
+                    context.Answers.UpdateRange(answers);
+                    context.SaveChanges();
+                    return answers;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

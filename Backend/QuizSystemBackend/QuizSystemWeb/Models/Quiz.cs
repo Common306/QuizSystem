@@ -8,7 +8,7 @@ namespace QuizSystemWeb.Models
     {
         public Quiz()
         {
-            //Questions = new HashSet<Question>();
+            Questions = new HashSet<Question>();
             //TakeQuizzes = new HashSet<TakeQuiz>();
         }
 
@@ -23,7 +23,7 @@ namespace QuizSystemWeb.Models
         public int? CreatorId { get; set; }
 
         public virtual User? Creator { get; set; }
-        //public virtual ICollection<Question>? Questions { get; set; }
+        public virtual ICollection<Question>? Questions { get; set; }
         //public virtual ICollection<TakeQuiz>? TakeQuizzes { get; set; }
     }
 }

@@ -31,5 +31,12 @@ namespace QuizSystemApi.Controllers
             List<Answer> res = _answerRepository.CreateListAnswer(answers);
             return Ok(res);
         }
+
+        [HttpPut]
+        public IActionResult Update(List<Answer> answers)
+        {
+            List<Answer> res = _answerRepository.UpdateListAnswer(answers);
+            return Ok(res);
+        }
     }
 }

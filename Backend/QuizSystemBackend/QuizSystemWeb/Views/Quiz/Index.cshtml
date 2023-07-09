@@ -1,0 +1,290 @@
+﻿@model List<Quiz>
+@{
+    ViewData["Title"] = "Manage Quiz";
+
+    ViewData["SubTitle"] = "Manage Quiz";
+    ViewData["ManageQuiz"] = "active";
+
+    Layout = "_Layout";
+}
+<style>
+    .cursor-pointer:hover {
+        cursor: pointer
+    }
+</style>
+<!-- Modal Add -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create new quiz</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form asp-action="Create" asp-controller="Quiz" method="post">
+                    <div class="mb-3">
+                        <label for="quizTitle" class="form-control-label">
+                            Title <span class="text-danger">*</span>
+                        </label>
+                        <input id="quizTitle" class="form-control" type="text" name="Title" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="quizDescription" class="form-control-label">
+                            Description <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control" id="quizDescription" rows="3" name="Description"></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" value="true" name="IsPublish" />
+                            <label class="form-check-label">
+                                Publish
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="dateStart" class="form-control-label">
+                            Start Time<span class="text-danger">*</span>
+                        </label>
+                        <input id="dateStart" class="form-control" type="datetime" value="@DateTime.Now" name="StartAt">
+                    </div>
+                    <div class="mb-3">
+                        <label for="dateEnd" class="form-control-label">
+                            End Time <span class="text-danger">*</span>
+                        </label>
+                        <input id="dateEnd" class="form-control" type="datetime" value="@DateTime.Now" name="EndAt">
+                    </div>
+                    <div class="mb-3">
+                        <label for="passScore" class="form-control-label">
+                            Pass score <span class="text-danger">*</span>
+                        </label>
+                        <input id="passScore" class="form-control" type="number" name="PassScore" min="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="quizCode" class="form-control-label">
+                            Quiz code
+                        </label>
+                        <input id="quizCode" class="form-control" type="text" name="QuizCode">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit -->
+<div class="modal fade" id="editQuizModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit quiz</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form method="post" asp-action="Edit" asp-controller="Quiz">
+                    <div class="mb-3">
+                        <label for="editQuizId" class="form-control-label">
+                            ID
+                        </label>
+                        <input class="form-control" name="QuizId" id="qQuizId" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editQuizTitle" class="form-control-label">
+                            Title <span class="text-danger">*</span>
+                        </label>
+                        <input id="qTitle" class="form-control" type="text" name="Title" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editQuizDescription" class="form-control-label">
+                           Description <span class="text-danger">*</span>
+                        </label>
+                        <textarea class="form-control" id="qDescription" rows="3" name="Description"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="qPublish" name="IsPublish" />
+                            <label>Publish</label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="q.StartAt" class="form-control-label">
+                            Date start <span class="text-danger">*</span>
+                        </label>
+                        <input id="qStartAt" class="form-control datepicker" type="datetime" name="StartAt" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="qEndAt" class="form-control-label">
+                            Date end <span class="text-danger">*</span>
+                        </label>
+                        <input id="qEndAt" class="form-control datepicker" type="datetime" name="EndAt" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editPassScore" class="form-control-label">
+                            Pass score <span class="text-danger">*</span>
+                        </label>
+                        <input id="qPassScore" class="form-control" type="number" name="PassScore" min="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="editQuizCode" class="form-control-label">
+                            Quiz code
+                        </label>
+                        <input id="qQuizCode" class="form-control" type="text" name="QuizCode">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+
+            <div class="card-header pb-0">
+                <button class="btn btn-icon btn-3 btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#addModal">
+                    <span class="btn-inner--icon"><i class="ni ni-fat-add "></i></span>
+                    <span class="btn-inner--text">Create quiz</span>
+                </button>
+
+                <h6>Manage Quiz</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0" id="myTable">
+                        <thead>
+                            <tr>
+                                <th style="width:50px"
+                                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Title</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Start</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">End</th>
+                                <th class="text-secondary opacity-7"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var quiz in Model)
+                            {
+                                <tr>
+                                    <td class="align-middle text-sm">
+                                        <p class="text-xs font-weight-bold mb-0 ps-3">@quiz.QuizId</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-xs font-weight-bold mb-0">@quiz.Title</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-xs font-weight-bold mb-0">@quiz.Description</p>
+                                    </td>
+                                    <td class="align-middle text-sm">
+                                        @if (quiz.IsPublish)
+                                        {
+                                            <span class="badge badge-sm bg-gradient-success">Publish</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-sm bg-gradient-danger">Not Publish</span>
+                                        }
+                                    </td>
+                                    <td class="align-middle">
+                                        <span class="text-secondary text-xs font-weight-bold">@quiz.StartAt</span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <span class="text-secondary text-xs font-weight-bold">@quiz.EndAt</span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <a href="details/@quiz.QuizId" class="text-info font-weight-bold text-xs" data-toggle="tooltip">
+                                            View
+                                        </a> /
+                                        <a class="text-secondary font-weight-bold text-xs edit-quiz" data-toggle="tooltip"
+                                           data-quiz-id="@quiz.QuizId" data-quiz-title="@quiz.Title" data-quiz-description="@quiz.Description"
+                                           data-quiz-start="@quiz.StartAt" data-quiz-end="@quiz.EndAt" data-quiz-publish="@quiz.IsPublish"
+                                           data-quiz-score="@quiz.PassScore" data-quiz-code="@quiz.QuizCode">
+                                            Edit
+                                        </a> /
+                                        <span onclick="deleteQuizById(@quiz.QuizId, this)" class="cursor-pointer text-primary font-weight-bold text-xs" data-toggle="tooltip">
+                                            Delete
+                                        </span> /
+                                        <a href="../question/index?quizid=@quiz.QuizId" class="text-primary font-weight-bold text-xs" data-toggle="tooltip">
+                                            Edit Questions
+                                        </a>
+
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+
+        $(".edit-quiz").on('click', function () {
+            let quiz = $(this);
+            console.log(quiz);
+
+            $("#qQuizId").val(quiz.attr("data-quiz-id"));
+            $("#qTitle").val(quiz.attr("data-quiz-title"));
+            $("#qDescription").val(quiz.attr("data-quiz-description"));
+
+            $("#qPublish").val("true");
+            if (quiz.attr("data-quiz-publish") === 'True') {
+                $("#qPublish").prop("checked", true);
+            } else {
+                $("#qPublish").prop("checked", false);
+            }
+            $("#qStartAt").val(quiz.attr("data-quiz-start"));
+            $("#qEndAt").val(quiz.attr("data-quiz-end"));
+            $("#qPassScore").val(quiz.attr("data-quiz-score"));
+            $("#qQuizCode").val(quiz.attr("data-quiz-code"));
+            $("#editQuizModal").modal("show");
+        });
+
+
+        function deleteQuizById(id, btn) {
+            $.confirm({
+                title: 'Confirm!',
+                content: 'Delete this quiz!',
+                type: 'red',
+                buttons: {
+                    delete: {
+                        btnClass: 'btn-danger',
+                        action: function () {
+                            $.ajax({
+                                url: 'https://localhost:7017/quiz/delete/' + id,
+                                type: 'DELETE',
+                                success: function (data, textStatus, jqXHR) {
+                                    $(btn).closest('tr').fadeOut("slow");
+                                },
+                            });
+                        }
+                    },
+                    cancel: function () {
+                    }
+                }
+            });
+        }
+
+    </script>
+}

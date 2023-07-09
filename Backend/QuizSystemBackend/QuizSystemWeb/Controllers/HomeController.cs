@@ -10,6 +10,7 @@ using System.Text.Json;
 
 namespace QuizSystemWeb.Controllers
 {
+	[Route("home")]
     public class HomeController : Controller
     {
 		private readonly HttpClient client = null;
@@ -20,18 +21,27 @@ namespace QuizSystemWeb.Controllers
 			var contentType = new MediaTypeWithQualityHeaderValue("application/json");
 			client.DefaultRequestHeaders.Accept.Add(contentType);
 		}
-
+		[Route("/login")]
 		public IActionResult Login()
 		{
 			return View();
 		}
 
+        [Route("/logout")]
+        public IActionResult Logout()
+        {
+			Response.Cookies.Delete("Token");
+            return RedirectToAction("Login", "Home");
+        }
+
+        [Route("/register")]
 		public IActionResult Register()
 		{
 			return View();
 		}
 
         [HttpPost]
+        [Route("/login")]
         public async Task<IActionResult> Login(string username, string password)
         {
 			LoginDtoRequest req = new LoginDtoRequest
@@ -68,7 +78,8 @@ namespace QuizSystemWeb.Controllers
         }
 
 		[HttpPost]
-		public async Task<IActionResult> Register(RegisterDtoRequest request)
+        [Route("/register")]
+        public async Task<IActionResult> Register(RegisterDtoRequest request)
 		{
 			try
 			{

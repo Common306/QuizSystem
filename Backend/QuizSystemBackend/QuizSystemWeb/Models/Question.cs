@@ -8,7 +8,7 @@ namespace QuizSystemWeb.Models
     {
         public Question()
         {
-            //Answers = new HashSet<Answer>();
+            Answers = new HashSet<Answer>();
         }
 
         public int QuestionId { get; set; }
@@ -19,6 +19,6 @@ namespace QuizSystemWeb.Models
         public bool? IsActive { get; set; }
 
         public virtual Quiz? Quiz { get; set; }
-        //public virtual ICollection<Answer> Answers { get; set; }
+        public virtual ICollection<Answer> Answers { get; set; }
     }
 }

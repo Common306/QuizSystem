@@ -108,5 +108,45 @@ namespace QuizSystemApi.Dao
                 throw new Exception(ex.Message);
             }
         }
+
+        public static List<TakeQuiz> ListResults(int id, User user)
+        {
+            try
+            {
+                using (var context = new DBContext())
+                {
+                    List<TakeQuiz> takequiz = context.TakeQuizzes
+                        .Include(x => x.User).Include(x => x.Quiz)
+                        .Where(x => x.QuizId == id && (user.RoleId == 1 || x.Quiz.CreatorId == user.UserId)).ToList();
+                    return takequiz;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public static List<TakeAnswer> ReviewQuiz(int id, User user)
+        {
+            try
+            {
+                using (var context = new DBContext())
+                {
+                    TakeQuiz? takeQuiz = context.TakeQuizzes
+                        .Include(x => x.Quiz).Include(x => x.User)
+                        .Where(x => user.RoleId == 1 || (user.RoleId == 2 && x.Quiz.CreatorId == user.UserId) || x.UserId == user.UserId)
+                        .FirstOrDefault(x => x.TakeQuizId == id);
+                    List<TakeAnswer> takeAnswers = context.TakeAnswers
+                        .Include(x => x.Answer).Include(x => x.TakeQuiz).Include(x => x.TakeQuiz.Quiz)
+                        .Where(x => x.TakeQuizId == takeQuiz.TakeQuizId).ToList();
+                    return takeAnswers;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

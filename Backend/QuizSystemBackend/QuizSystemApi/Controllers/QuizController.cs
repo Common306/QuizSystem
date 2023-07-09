@@ -65,5 +65,22 @@ namespace QuizSystemApi.Controllers
             }
             return Ok("Delete successfully!");
         }
+
+        [HttpGet]
+        [Route("results/{id}")]
+        public IActionResult Results(int id)
+        {
+            User user = TokenHelper.GetUserFromToken(HttpContext);
+            List<TakeQuiz> list = _quizRepository.ListResults(id, user);
+            return Ok(list);
+        }
+
+        [HttpGet]
+        [Route("review/{id}")]
+        public IActionResult ReviewQuiz(int id) {
+            User user = TokenHelper.GetUserFromToken(HttpContext);
+            List<TakeAnswer> list = _quizRepository.ReviewQuiz(id, user);
+            return Ok(list);
+        }
     }
 }

@@ -1,0 +1,63 @@
+﻿@model Quiz
+@{
+    ViewData["Title"] = "Detail";
+
+    ViewData["SubTitle"] = "Manage Quiz";
+    ViewData["ManageQuiz"] = "active";
+
+    Layout = "_Layout";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+
+            <form class="p-4">
+                <a class="form-control-label text-primary" href="../../quiz/index"><i class="ni ni-bold-left"></i> Back</a>
+                <div class="form-group">
+                    <label class="form-control-label">ID</label>
+                    <input class="form-control" type="text" value="@Model.QuizId" id="id-quiz" disabled>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label">Title</label>
+                    <input class="form-control" type="text" value="@Model.Title" disabled>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label">Content</label>
+                    <textarea rows="5" class="form-control" type="text" disabled>@Model.Description</textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label">Publish</label>
+                    <br>
+                    @if (Model.IsPublish)
+                    {
+                        <span class="badge badge-sm bg-gradient-success">Publish</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-sm bg-gradient-danger">No Publish</span>
+                    }
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label">Start Time</label>
+                    <input class="form-control" type="datetime" value="@Model.StartAt" disabled>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label">End Time</label>
+                    <input class="form-control" type="datetime" value="@Model.EndAt" disabled>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label">Pass Score</label>
+                    <input class="form-control" type="text" value="@Model.PassScore" disabled>
+                </div>
+                <div class="form-group">
+                    <label class="form-control-label">Quiz Code</label>
+                    <input class="form-control" type="text" value="@Model.QuizCode" disabled>
+                </div>
+                <div class="form-group mt-5" style="width: 30%; display:flex; justify-content: space-between">
+                    <a href="../results/@Model.QuizId" type="button" class="btn btn-info">View result</a>
+                    <a href="../../question/index?quizid=@Model.QuizId" type="button" class="btn btn-primary">Edit Question</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

@@ -14,5 +14,9 @@ namespace QuizSystemApi.Repository
         {
             return AnswerDao.CreateListAnswer(answers);
         }
+        public List<Answer> UpdateListAnswer(List<Answer> answers)
+        {
+            return AnswerDao.UpdateListAnswer(answers);
+        }
     }
 }

@@ -26,6 +26,14 @@ namespace QuizSystemApi.Repository
         {
             return QuizDao.Delete(id, user);
         }
-        
+        public List<TakeQuiz> ListResults(int id, User user)
+        {
+            return QuizDao.ListResults(id, user);
+        }
+        public List<TakeAnswer> ReviewQuiz(int id, User user)
+        {
+            return QuizDao.ReviewQuiz(id, user);
+        }
+
     }
 }

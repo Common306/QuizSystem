@@ -1,1 +1,290 @@
-﻿
+﻿@{
+    ViewData["Title"] = "Manage User";
+
+    ViewData["SubTitle"] = "Manage User";
+    ViewData["ManageUser"] = "active";
+
+    Layout = "_Layout";
+}
+
+<style>
+    .cursor-pointer:hover {
+        cursor: pointer
+    }
+</style>
+
+<!-- Modal Add -->
+<div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Create new user</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form asp-action="Create" asp-controller="User" method="post">
+                    <div class="mb-3">
+                        <label for="username" class="form-control-label">
+                            Username <span class="text-danger">*</span>
+                        </label>
+                        <input id="username" class="form-control" type="text" name="Username" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-control-label">
+                            Password <span class="text-danger">*</span>
+                        </label>
+                        <input id="password" class="form-control" type="password" name="Password" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="fullname" class="form-control-label">
+                            Fullname <span class="text-danger">*</span>
+                        </label>
+                        <input id="fullname" class="form-control" type="text" name="FullName" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="phonenumber" class="form-control-label">
+                            Phone number <span class="text-danger">*</span>
+                        </label>
+                        <input id="phonenumber" class="form-control" type="text" name="PhoneNumber" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="role" class="form-control-label">
+                            Role <span class="text-danger">*</span>
+                        </label>
+                        <select class="form-control" name="RoleId">
+                            <option value="1">Admin</option>
+                            <option value="2">Teacher</option>
+                            <option value="3">Student</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" value="true" name="IsEnable" />
+                            <label class="form-check-label">
+                                Enable
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edit -->
+<div class="modal fade" id="editUserModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Edit user</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+                <form method="post" asp-action="Edit" asp-controller="User">
+                    <div class="mb-3">
+                        <label for="editUserTitle" class="form-control-label">
+                            ID
+                        </label>
+                        <input id="uUserId" class="form-control" name="UserId" readonly />
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editUserUsername" class="form-control-label">
+                            Username <span class="text-danger">*</span>
+                        </label>
+                        <input id="uUsername" class="form-control" type="text" name="Username" readonly>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editUserPassword" class="form-control-label">
+                            Password <span class="text-danger">*</span>
+                        </label>
+                        <input id="uPassword" class="form-control" type="password" name="Password" required />
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="editUserFullname" class="form-control-label">
+                            Fullname <span class="text-danger">*</span>
+                        </label>
+                        <input id="uFullname" class="form-control" type="text" name="FullName" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editUserPhoneNumber" class="form-control-label">
+                            Phone number <span class="text-danger">*</span>
+                        </label>
+                        <input id="uPhonenumber" class="form-control" type="text" name="PhoneNumber" required>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="editUserRole" class="form-control-label">
+                            Role <span class="text-danger">*</span>
+                        </label>
+                        <select id="uRole" class="form-control" name="RoleId">
+                            <option value="1">Admin</option>
+                            <option value="2">Teacher</option>
+                            <option value="3">Student</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input id="uIsEnable" type="checkbox" class="form-check-input" value="true" name="IsEnable" />
+                            <label class="form-check-label">
+                                Enable
+                            </label>
+                        </div>
+                    </div>
+                   
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+
+            <div class="card-header pb-0">
+                <button class="btn btn-icon btn-3 btn-primary" type="button" data-bs-toggle="modal"
+                        data-bs-target="#addModal">
+                    <span class="btn-inner--icon"><i class="ni ni-fat-add "></i></span>
+                    <span class="btn-inner--text">Create user</span>
+                </button>
+
+                <h6>Manage User</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0" id="myTable">
+                        <thead>
+                            <tr>
+                                <th style="width:50px"
+                                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Username</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Role</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Fullname</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Phonenumber</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Status</th>
+                                <th class="text-secondary opacity-7"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (User user in Model)
+                            {
+                                <tr>
+                                    <td class="align-middle text-sm">
+                                        <p class="text-xs font-weight-bold mb-0 ps-3">@user.UserId</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-xs font-weight-bold mb-0">@user.Username</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-xs font-weight-bold mb-0">@user.Role.RoleName</p>
+                                    </td>
+                                    <td class="align-middle">
+                                        <span class="text-secondary text-xs font-weight-bold">@user.FullName</span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <span class="text-secondary text-xs font-weight-bold">@user.PhoneNumber</span>
+                                    </td>
+                                    <td class="align-middle text-sm">
+                                        @if (user.IsEnable == true)
+                                        {
+                                            <span class="badge badge-sm bg-gradient-success">Enable</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge badge-sm bg-gradient-danger">Disable</span>
+                                        }
+                                    </td>
+                                    
+                                    <td class="align-middle">
+                                        <a class="text-secondary font-weight-bold text-xs edit-user" data-toggle="tooltip"
+                                           data-user-id="@user.UserId" data-user-username="@user.Username" data-user-password="@user.Password" data-user-roleid="@user.RoleId"
+                                           data-user-fullname="@user.FullName" data-user-phonenumber="@user.PhoneNumber" data-user-isenable="@user.IsEnable">
+                                            Edit
+                                        </a> /
+                                        
+                                        <span onclick="deleteUserById(@user.UserId, this)" class="cursor-pointer text-primary font-weight-bold text-xs" data-toggle="tooltip">
+                                            Delete
+                                        </span>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+
+        $(".edit-user").on('click', function () {
+            let quiz = $(this);
+
+            $("#uUserId").val(quiz.attr("data-user-id"));
+            $("#uUsername").val(quiz.attr("data-user-username"));
+            $("#uPassword").val(quiz.attr("data-user-password"));
+            $("#uFullname").val(quiz.attr("data-user-fullname"));
+            $("#uPhonenumber").val(quiz.attr("data-user-phonenumber"));
+            $("#uIsEnable").val("true");
+            if (quiz.attr("data-user-isenable") === 'True') {
+                $("#uIsEnable").prop("checked", true);
+            } else {
+                $("#uIsEnable").prop("checked", false);
+            }
+
+            $("#uRole").val(quiz.attr("data-user-roleid"));
+            $("#editUserModal").modal("show");
+        });
+
+        function deleteUserById(id, btn) {
+            $.confirm({
+                title: 'Confirm!',
+                content: 'Delete this quiz!',
+                type: 'red',
+                buttons: {
+                    delete: {
+                        btnClass: 'btn-danger',
+                        action: function () {
+                            $.ajax({
+                                url: 'https://localhost:7017/user/delete/' + id,
+                                type: 'DELETE',
+                                success: function (data, textStatus, jqXHR) {
+                                    $(btn).closest('tr').fadeOut("slow");
+                                },
+                            });
+                        }
+                    },
+                    cancel: function () {
+                    }
+                }
+            });
+        }
+
+    </script>
+}
+
