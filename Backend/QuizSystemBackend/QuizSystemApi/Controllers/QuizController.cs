@@ -27,6 +27,7 @@ namespace QuizSystemApi.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("{id}")]
         public IActionResult Get(int id)
         {
@@ -81,6 +82,15 @@ namespace QuizSystemApi.Controllers
             User user = TokenHelper.GetUserFromToken(HttpContext);
             List<TakeAnswer> list = _quizRepository.ReviewQuiz(id, user);
             return Ok(list);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("student")]
+        public IActionResult GetAllForStudent()
+        {
+            List<Quiz> quizzes = _quizRepository.GetAll();
+            return Ok(quizzes);
         }
     }
 }

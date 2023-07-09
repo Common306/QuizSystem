@@ -18,6 +18,7 @@ namespace QuizSystemApi.Controllers
         {
             _answerRepository = answerRepository;
         }
+
         [HttpGet]
         public IActionResult GetList(int questionId)
         {
@@ -37,6 +38,15 @@ namespace QuizSystemApi.Controllers
         {
             List<Answer> res = _answerRepository.UpdateListAnswer(answers);
             return Ok(res);
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("student")]
+        public IActionResult GetListForStudent(int questionId)
+        {
+            List<Answer> answers = _answerRepository.GetListByQuestionIdForStudent(questionId);
+            return Ok(answers);
         }
     }
 }

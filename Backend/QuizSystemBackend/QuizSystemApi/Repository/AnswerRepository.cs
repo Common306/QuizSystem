@@ -10,6 +10,10 @@ namespace QuizSystemApi.Repository
         {
             return AnswerDao.GetListByQuestionId(questionId);
         }
+        public List<Answer> GetListByQuestionIdForStudent(int questionId)
+        {
+            return AnswerDao.GetListByQuestionId(questionId);
+        }
         public List<Answer> CreateListAnswer(List<Answer> answers)
         {
             return AnswerDao.CreateListAnswer(answers);

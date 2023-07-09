@@ -55,5 +55,14 @@ namespace QuizSystemApi.Controllers
             }
             return Ok("Delete successfully!");
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("student")]
+        public IActionResult GetListByQuizIdForStudent(int quizId)
+        {
+            List<Question> questions = _questionRepository.GetListByQuizId(quizId);
+            return Ok(questions);
+        }
     }
 }

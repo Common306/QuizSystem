@@ -25,5 +25,10 @@ namespace QuizSystemApi.Repository
         {
             return QuestionDao.Delete(id, user);
         }
+
+        public List<Question> GetListByQuizId(int quizId)
+        {
+            return QuestionDao.GetListByQuizId(quizId);
+        }
     }
 }

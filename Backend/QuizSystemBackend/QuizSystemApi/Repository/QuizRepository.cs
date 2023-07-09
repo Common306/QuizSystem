@@ -10,6 +10,10 @@ namespace QuizSystemApi.Repository
         {
             return QuizDao.GetAll(user);
         }
+        public List<Quiz> GetAll()
+        {
+            return QuizDao.GetAll();
+        }
         public Quiz Get(int id, User user)
         {
             return QuizDao.Get(id, user);

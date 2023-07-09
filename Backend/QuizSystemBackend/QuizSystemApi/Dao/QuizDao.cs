@@ -45,7 +45,7 @@ namespace QuizSystemApi.Dao
             try
             {
                 using (var context = new DBContext())
-                {  
+                {
                     context.Quizzes.Add(quiz);
                     context.SaveChanges();
                     return quiz;
@@ -141,6 +141,23 @@ namespace QuizSystemApi.Dao
                         .Include(x => x.Answer).Include(x => x.TakeQuiz).Include(x => x.TakeQuiz.Quiz)
                         .Where(x => x.TakeQuizId == takeQuiz.TakeQuizId).ToList();
                     return takeAnswers;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public static List<Quiz> GetAll()
+        {
+            try
+            {
+                using (var context = new DBContext())
+                {
+                    List<Quiz> quizzes = context.Quizzes.Include(x => x.Creator)
+                        .Where(x => x.IsPublish == true).ToList();
+                    return quizzes;
                 }
             }
             catch (Exception ex)

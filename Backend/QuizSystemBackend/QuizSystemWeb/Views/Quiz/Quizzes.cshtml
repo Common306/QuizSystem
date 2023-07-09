@@ -1,0 +1,68 @@
+﻿@model IEnumerable<QuizSystemWeb.Models.Quiz>
+@{
+    ViewData["Title"] = "Manage Quiz";
+
+    ViewData["SubTitle"] = "Manage Quiz";
+    ViewData["ManageQuiz"] = "active";
+
+    Layout = "_Layout";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card mb-4">
+
+            <div class="card-header pb-0">
+                <h6>Quiz List</h6>
+            </div>
+            <div class="card-body px-0 pt-0 pb-2">
+
+                <div class="table-responsive p-0">
+                    <table class="table align-items-center mb-0" id="myTable">
+                        <thead>
+                            <tr>
+                                <th style="width:50px"
+                                    class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Title</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Start</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">End</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Creator</th>
+                                <th class="text-secondary opacity-7"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var quiz in Model)
+                            {
+                                <tr>
+                                    <td class="align-middle text-sm">
+                                        <p class="text-xs font-weight-bold mb-0 ps-3">@quiz.QuizId</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-xs font-weight-bold mb-0">@quiz.Title</p>
+                                    </td>
+                                    <td>
+                                        <p class="text-xs font-weight-bold mb-0">@quiz.Description</p>
+                                    </td>
+                                    <td class="align-middle">
+                                        <span class="text-secondary text-xs font-weight-bold">@quiz.StartAt</span>
+                                    </td>
+                                    <td class="align-middle">
+                                        <span class="text-secondary text-xs font-weight-bold">@quiz.EndAt</span>
+                                    </td>
+                                    <td>
+                                        <p class="text-xs font-weight-bold mb-0">@quiz.Creator.FullName</p>
+                                    </td>
+                                    <td class="align-middle">
+                                        <a href="../question/doQuiz?quizId=@quiz.QuizId" class="text-info font-weight-bold text-xs" data-toggle="tooltip">
+                                            Take quiz
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

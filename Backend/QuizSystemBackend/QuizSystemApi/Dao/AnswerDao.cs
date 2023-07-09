@@ -54,5 +54,21 @@ namespace QuizSystemApi.Dao
                 throw new Exception(ex.Message);
             }
         }
+
+        public static List<Answer> GetListByQuestionIdForStudent(int questionId)
+        {
+            try
+            {
+                using (var context = new DBContext())
+                {
+                    List<Answer>? answers = context.Answers.Include(x => x.Question).Where(x => x.QuestionId == questionId && x.IsActive == true).ToList();
+                    return answers;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

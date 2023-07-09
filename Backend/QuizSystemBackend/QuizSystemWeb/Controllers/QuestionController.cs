@@ -202,5 +202,48 @@ namespace QuizSystemWeb.Controllers
                 throw new AuthenticationException("You dont have permisstion");
             }
         }
+
+        [Route("doQuiz")]
+        public async Task<IActionResult> DoQuiz(int quizid)
+        {
+            try
+            {
+                string? token = Request.Cookies["Token"];
+                if (token == null)
+                {
+                    return Unauthorized();
+                }
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                HttpResponseMessage response = await client.GetAsync(QuizApiUrl + "/" + quizid);
+                string strData = await response.Content.ReadAsStringAsync();
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+
+                // get quiz
+                Quiz? quiz = JsonSerializer.Deserialize<Quiz>(strData, options);
+
+                //get list question of a quiz
+                response = await client.GetAsync(QuestionApiUrl + "/student?quizId=" + quizid);
+                strData = await response.Content.ReadAsStringAsync();
+                List<Question>? questions = JsonSerializer.Deserialize<List<Question>>(strData, options);
+                foreach (Question q in questions)
+                {
+                    response = await client.GetAsync(AnswerApiUrl + "/student?questionId=" + q.QuestionId);
+                    strData = await response.Content.ReadAsStringAsync();
+                    List<Answer>? answers = JsonSerializer.Deserialize<List<Answer>>(strData, options);
+                    q.Answers = answers;
+                }
+                quiz.Questions = questions;
+
+                return View(quiz);
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized();
+            }
+        }
     }
 }

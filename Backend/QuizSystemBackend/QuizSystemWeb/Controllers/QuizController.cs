@@ -45,6 +45,33 @@ namespace QuizSystemWeb.Controllers
             }
 
         }
+        [Route("quizzes")]
+        public async Task<IActionResult> Quizzes()
+        {
+            try
+            {
+                string? token = Request.Cookies["Token"];
+                if (token == null)
+                {
+                    return Unauthorized();
+                }
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                HttpResponseMessage response = await client.GetAsync(QuizApiUrl + "/student");
+                string strData = await response.Content.ReadAsStringAsync();
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                List<Quiz>? quizzes = JsonSerializer.Deserialize<List<Quiz>>(strData, options);
+                return View(quizzes);
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized();
+            }
+
+        }
         [HttpGet]
         [Route("details/{id}")]
         public async Task<IActionResult> Details(int id)
