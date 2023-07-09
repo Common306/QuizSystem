@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QuizSystemApi.Models;
+using QuizSystemApi.Dto.Response;
 
 namespace QuizSystemApi.Dao
 {
@@ -129,24 +130,7 @@ namespace QuizSystemApi.Dao
 
         public static List<TakeAnswer> ReviewQuiz(int id, User user)
         {
-            try
-            {
-                using (var context = new DBContext())
-                {
-                    TakeQuiz? takeQuiz = context.TakeQuizzes
-                        .Include(x => x.Quiz).Include(x => x.User)
-                        .Where(x => user.RoleId == 1 || (user.RoleId == 2 && x.Quiz.CreatorId == user.UserId) || x.UserId == user.UserId)
-                        .FirstOrDefault(x => x.TakeQuizId == id);
-                    List<TakeAnswer> takeAnswers = context.TakeAnswers
-                        .Include(x => x.Answer).Include(x => x.TakeQuiz).Include(x => x.TakeQuiz.Quiz)
-                        .Where(x => x.TakeQuizId == takeQuiz.TakeQuizId).ToList();
-                    return takeAnswers;
-                }
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
+            return null;
         }
 
         public static List<Quiz> GetAll()

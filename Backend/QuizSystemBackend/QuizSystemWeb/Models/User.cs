@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace QuizSystemWeb.Models
 {
@@ -7,8 +8,8 @@ namespace QuizSystemWeb.Models
     {
         public User()
         {
-            //Quizzes = new HashSet<Quiz>();
-            //TakeQuizzes = new HashSet<TakeQuiz>();
+            Quizzes = new HashSet<Quiz>();
+            TakeQuizzes = new HashSet<TakeQuiz>();
         }
 
         public int UserId { get; set; }
@@ -22,7 +23,7 @@ namespace QuizSystemWeb.Models
         public bool? IsEnable { get; set; }
 
         public virtual Role? Role { get; set; } = null!;
-        //public virtual ICollection<Quiz> Quizzes { get; set; }
-        //public virtual ICollection<TakeQuiz> TakeQuizzes { get; set; }
+        public virtual ICollection<Quiz>? Quizzes { get; set; }
+        public virtual ICollection<TakeQuiz>? TakeQuizzes { get; set; }
     }
 }

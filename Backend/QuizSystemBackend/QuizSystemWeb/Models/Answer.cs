@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 
 namespace QuizSystemWeb.Models
-
 {
     public partial class Answer
     {
         public Answer()
         {
+            TakeAnswers = new HashSet<TakeAnswer>();
         }
 
         public int AnswerId { get; set; }
@@ -17,5 +17,6 @@ namespace QuizSystemWeb.Models
         public int? QuestionId { get; set; }
 
         public virtual Question? Question { get; set; }
+        public virtual ICollection<TakeAnswer> TakeAnswers { get; set; }
     }
 }
