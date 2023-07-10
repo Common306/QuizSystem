@@ -1,6 +1,7 @@
-﻿using QuizSystemApi.Models;
+﻿using QuizSystemWeb.Models;
+using System.Text.Json.Serialization;
 
-namespace QuizSystemApi.Dto.Response
+namespace QuizSystemWeb.Dto.Response
 {
     public class ReviewQuizDtoResponse
     {

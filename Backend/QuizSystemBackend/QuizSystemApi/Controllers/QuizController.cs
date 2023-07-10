@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using QuizSystemApi.Dto.Response;
 using QuizSystemApi.Models;
 using QuizSystemApi.Repository;
 using QuizSystemApi.Repository.IRepository;
@@ -79,8 +80,8 @@ namespace QuizSystemApi.Controllers
         [Route("review/{id}")]
         public IActionResult ReviewQuiz(int id) {
             User user = TokenHelper.GetUserFromToken(HttpContext);
-            List<TakeAnswer> list = _quizRepository.ReviewQuiz(id, user);
-            return Ok(list);
+            ReviewQuizDtoResponse result = _quizRepository.ReviewQuiz(id, user);
+            return Ok(result);
         }
     }
 }

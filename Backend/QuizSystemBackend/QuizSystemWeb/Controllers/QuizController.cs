@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using NuGet.Common;
+using QuizSystemWeb.Dto.Response;
 using QuizSystemWeb.Models;
 using System.Net.Http.Headers;
 using System.Security.Authentication;
@@ -200,9 +202,8 @@ namespace QuizSystemWeb.Controllers
                 {
                     PropertyNameCaseInsensitive = true
                 };
-                List<TakeQuiz>? quiz = JsonSerializer.Deserialize<List<TakeQuiz>>(strData, options);
-                ViewBag.QuizId = id;
-                return View(quiz);
+                ReviewQuizDtoResponse? review = JsonSerializer.Deserialize<ReviewQuizDtoResponse>(strData, options);
+                return View(review);
             }
             catch (Exception ex)
             {
