@@ -18,6 +18,10 @@ namespace QuizSystemApi.Repository
         {
             return QuizDao.Get(id, user);
         }
+        public Quiz Get(int id)
+        {
+            return QuizDao.Get(id);
+        }
         public Quiz Create(Quiz quiz)
         {
             return QuizDao.Create(quiz);

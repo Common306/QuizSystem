@@ -92,5 +92,14 @@ namespace QuizSystemApi.Controllers
             List<Quiz> quizzes = _quizRepository.GetAll();
             return Ok(quizzes);
         }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("student/{id}")]
+        public IActionResult GetForStudent(int id)
+        {
+            Quiz quiz = _quizRepository.Get(id);
+            return Ok(quiz);
+        }
     }
 }

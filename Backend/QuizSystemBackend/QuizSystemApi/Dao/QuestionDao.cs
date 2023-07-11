@@ -103,5 +103,24 @@ namespace QuizSystemApi.Dao
                 throw new Exception(ex.Message);
             }
         }
+
+        public static List<Question> GetKeyOfQuiz(int quizId)
+        {
+            try
+            {
+                using (var context = new DBContext())
+                {
+                    List<Question>? questions = context.Questions.Include(x => x.Quiz)
+                        .Where(x => x.QuizId == quizId && x.IsActive == true)
+                        .Include(x => x.Answers.Where(a => a.IsActive == true && a.IsCorrect == true))
+                        .ToList();
+                    return questions;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

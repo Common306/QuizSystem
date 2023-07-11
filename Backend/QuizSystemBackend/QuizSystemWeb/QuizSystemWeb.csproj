@@ -29,4 +29,8 @@
     <Folder Include="wwwroot\lib\bootstrap\dist\js\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\QuizSystemApi\QuizSystemApi.csproj" />
+  </ItemGroup>
+
 </Project>

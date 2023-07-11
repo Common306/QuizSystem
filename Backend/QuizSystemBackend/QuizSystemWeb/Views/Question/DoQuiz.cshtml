@@ -16,9 +16,10 @@
                     <h2>@Model.Title</h2>
                 </div>
 
-                <form class="p-4" asp-action="Submit">
+                <form class="p-4" method="post" asp-action="SubmitQuiz">
                     @{
                         int i = 1;
+                        int count = 0;
                     }
                     @foreach (Question question in Model.Questions)
                     {
@@ -35,14 +36,16 @@
                                 @foreach (Answer ans in question.Answers)
                                 {
                                     <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" id="@ans.AnswerId">
+                                        <input class="form-check-input" type="checkbox" name="@question.QuestionId" value="@ans.AnswerId" id="@ans.AnswerId">
                                         <label for="@ans.AnswerId" class="custom-control-label">@ans.Content</label>
                                     </div>
                                 }
                             </div>
                         </div>
                     }
-                    <button class="btn btn-icon btn-3 btn-primary" type="button">
+                    <input name="quizId" value="@Model.QuizId" hidden />
+                    <input name="startAt" id="startAt" type="datetime" hidden />
+                    <button class="btn btn-icon btn-3 btn-primary" type="submit">
                         <span class="btn-inner--text">Submit</span>
                     </button>
                 </form>
@@ -50,3 +53,20 @@
         </div>
     </div>
 </div>
+<script>
+    // Tạo một đối tượng Date mới
+    var now = new Date();
+
+    // Lấy giá trị ngày giờ hiện tại
+    var year = now.getFullYear();
+    var month = (now.getMonth() + 1).toString().padStart(2, '0');
+    var day = now.getDate().toString().padStart(2, '0');
+    var hours = now.getHours().toString().padStart(2, '0');
+    var minutes = now.getMinutes().toString().padStart(2, '0');
+
+    // Tạo chuỗi có định dạng YYYY-MM-DDTHH:MM (đúng định dạng của datetime-local input)
+    var formattedDate = year + '-' + month + '-' + day + 'T' + hours + ':' + minutes;
+
+    // Gán giá trị ngày giờ vào ô input
+    document.getElementById('startAt').value = formattedDate;
+</script>

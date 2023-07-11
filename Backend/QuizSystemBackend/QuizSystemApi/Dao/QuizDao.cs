@@ -140,8 +140,25 @@ namespace QuizSystemApi.Dao
                 using (var context = new DBContext())
                 {
                     List<Quiz> quizzes = context.Quizzes.Include(x => x.Creator)
+                        .Include(x => x.Questions.Where(q => q.IsActive == true))
                         .Where(x => x.IsPublish == true).ToList();
                     return quizzes;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public static Quiz Get(int id)
+        {
+            try
+            {
+                using (var context = new DBContext())
+                {
+                    Quiz? quiz = context.Quizzes.Include(x => x.Creator).FirstOrDefault(x => x.QuizId == id);
+                    return quiz;
                 }
             }
             catch (Exception ex)

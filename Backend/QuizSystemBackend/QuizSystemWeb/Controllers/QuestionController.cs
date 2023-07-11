@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using QuizSystemApi;
 using QuizSystemWeb.Models;
 using System.Net.Http.Headers;
 using System.Security.Authentication;
@@ -14,6 +15,7 @@ namespace QuizSystemWeb.Controllers
         private string QuizApiUrl = "https://localhost:7049/api/quiz";
         private string QuestionApiUrl = "https://localhost:7049/api/question";
         private string AnswerApiUrl = "https://localhost:7049/api/answer";
+        private string TakeQuizApiUrl = "https://localhost:7049/api/takeQuiz";
         public QuestionController()
         {
             client = new HttpClient();
@@ -46,7 +48,7 @@ namespace QuizSystemWeb.Controllers
                 response = await client.GetAsync(QuestionApiUrl + "?quizId=" + quizid);
                 strData = await response.Content.ReadAsStringAsync();
                 List<Question>? questions = JsonSerializer.Deserialize<List<Question>>(strData, options);
-                foreach(Question q in questions)
+                foreach (Question q in questions)
                 {
                     response = await client.GetAsync(AnswerApiUrl + "?questionId=" + q.QuestionId);
                     strData = await response.Content.ReadAsStringAsync();
@@ -67,7 +69,7 @@ namespace QuizSystemWeb.Controllers
         [Route("create")]
         public async void CreateQuestion(int quizId, string questionContent, int questionScore, string[] answersMark, string[] answers)
         {
-            
+
             Question question = new Question
             {
                 Content = questionContent,
@@ -157,7 +159,7 @@ namespace QuizSystemWeb.Controllers
 
                 //edit list answer
                 List<Answer> listAnswer = new List<Answer>();
-                for(int i = 0; i < answers.Length; i++)
+                for (int i = 0; i < answers.Length; i++)
                 {
                     Answer a = new Answer
                     {
@@ -214,7 +216,7 @@ namespace QuizSystemWeb.Controllers
                     return Unauthorized();
                 }
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                HttpResponseMessage response = await client.GetAsync(QuizApiUrl + "/" + quizid);
+                HttpResponseMessage response = await client.GetAsync(QuizApiUrl + "/student/" + quizid);
                 string strData = await response.Content.ReadAsStringAsync();
 
                 var options = new JsonSerializerOptions
@@ -244,6 +246,57 @@ namespace QuizSystemWeb.Controllers
             {
                 return Unauthorized();
             }
+        }
+
+        [HttpPost]
+        [Route("SubmitQuiz")]
+
+        public async Task<IActionResult> SubmitQuiz(int quizId, DateTime startAt)
+        {
+            QuizSystemApi.Models.User user = TokenHelper.GetUserFromToken(HttpContext);
+            string? token = Request.Cookies["Token"];
+            if (token == null)
+            {
+                return Unauthorized();
+            }
+            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            double score = 0;
+            var listQuestion = Request.Form;
+            HttpResponseMessage response = await client.GetAsync(QuestionApiUrl + "/quizKey?quizId=" + quizId);
+            string strData = await response.Content.ReadAsStringAsync();
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+            List<Question>? keyQuestions = JsonSerializer.Deserialize<List<Question>>(strData, options);
+            foreach (Question key in keyQuestions)
+            {
+                bool flag = true;
+                foreach (var k in key.Answers)
+                {
+                    if (!listQuestion[key.QuestionId.ToString()].ToList().Contains(k.AnswerId + "") || listQuestion[key.QuestionId.ToString()].ToList().Count() != key.Answers.Count())
+                    {
+                        flag = false;
+                    }
+                }
+                if (flag)
+                {
+                    score += double.Parse(key.Score.ToString().AsSpan());
+                }
+            }
+            var end = DateTime.Now;
+            TakeQuiz takeQuiz = new TakeQuiz();
+            takeQuiz.UserId = user.UserId;
+            takeQuiz.QuizId = quizId;
+            takeQuiz.StartAt = startAt; 
+            takeQuiz.EndAt = end;
+            takeQuiz.Score = score;
+            string jsonData = JsonSerializer.Serialize(takeQuiz);
+            var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+            response = await client.PostAsync(TakeQuizApiUrl, content);
+            strData = await response.Content.ReadAsStringAsync();
+
+            return RedirectToAction("Quizzes", "Quiz");
         }
     }
 }

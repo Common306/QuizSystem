@@ -26,6 +26,15 @@ namespace QuizSystemApi.Controllers
             List<Question> questions = _questionRepository.GetListByQuizId(quizId, user);
             return Ok(questions);
         }
+        
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("quizKey")]
+        public IActionResult GetKeyOfQuiz(int quizId)
+        {
+            List<Question> questions = _questionRepository.GetKeyOfQuiz(quizId);
+            return Ok(questions);
+        }
 
         [HttpPost]
         public IActionResult Create(Question question)
