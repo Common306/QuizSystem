@@ -8,6 +8,13 @@ namespace QuizSystemApi.Controllers
     [Route("api/takeQuiz")]
     public class TakeQuizController : Controller
     {
+        [HttpGet]
+        public IActionResult GetList()
+        {
+            List<TakeQuiz> takes = TakeQuizDao.GetAll();
+            return Ok(takes);
+        }
+
         [HttpPost]
         public IActionResult Create(TakeQuiz take)
         {

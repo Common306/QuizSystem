@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 using NuGet.Common;
+using QuizSystemWeb.Models;
 using QuizSystemWeb.Dto.Response;
 using QuizSystemWeb.Models;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
 using System.Security.Authentication;
+using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
@@ -14,6 +18,7 @@ namespace QuizSystemWeb.Controllers
     {
         private readonly HttpClient client = null;
         private string QuizApiUrl = "https://localhost:7049/api/quiz";
+        private string TakeQuizApiUrl = "https://localhost:7049/api/takeQuiz";
         public QuizController()
         {
             client = new HttpClient();
@@ -53,6 +58,7 @@ namespace QuizSystemWeb.Controllers
             try
             {
                 string? token = Request.Cookies["Token"];
+                User user = GetUserFromToken(token);
                 if (token == null)
                 {
                     return Unauthorized();
@@ -66,6 +72,11 @@ namespace QuizSystemWeb.Controllers
                     PropertyNameCaseInsensitive = true
                 };
                 List<Quiz>? quizzes = JsonSerializer.Deserialize<List<Quiz>>(strData, options);
+                response = await client.GetAsync(TakeQuizApiUrl);
+                strData = await response.Content.ReadAsStringAsync();
+                List<TakeQuiz>? takeQuizzes = JsonSerializer.Deserialize<List<TakeQuiz>>(strData, options);
+                ViewBag.takeQuizzes = takeQuizzes;
+                ViewBag.user = user;
                 return View(quizzes);
             }
             catch (Exception ex)
@@ -230,11 +241,76 @@ namespace QuizSystemWeb.Controllers
                     PropertyNameCaseInsensitive = true
                 };
                 ReviewQuizDtoResponse? review = JsonSerializer.Deserialize<ReviewQuizDtoResponse>(strData, options);
+                
                 return View(review);
             }
             catch (Exception ex)
             {
                 return Unauthorized();
+            }
+        }
+
+        public User GetUserFromToken(string token)
+        {
+            var _config = new ConfigurationBuilder()
+                        .SetBasePath(Directory.GetCurrentDirectory())
+                        .AddJsonFile("appsettings.json", true, true)
+                        .Build();
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = securityKey,
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidIssuer = _config["Jwt:Issuer"],
+                ValidAudience = _config["Jwt:Issuer"]
+            };
+            if (token == null)
+            {
+                return new User();
+            }
+            try
+            {
+                var claimsPrincipal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
+                string userIdClaim = claimsPrincipal.FindFirst("UserId").Value;
+                string userUsernameClaim = claimsPrincipal.FindFirst("Username").Value;
+                string userRoleIdClaim = claimsPrincipal.FindFirst("RoleId").Value;
+                string userRoleClaim = claimsPrincipal.FindFirst(ClaimTypes.Role).Value;
+                string userFullNameClaim = claimsPrincipal.FindFirst("Fullname").Value;
+                string userPhoneNumberClaim = claimsPrincipal.FindFirst("PhoneNumber").Value;
+                string? userCreateAtClaim = claimsPrincipal.FindFirst("CreateAt").Value;
+                string userUpdateAtClaim = claimsPrincipal.FindFirst("UpdateAt").Value;
+
+                if (userIdClaim != null)
+                {
+                    User user = new User
+                    {
+                        UserId = Convert.ToInt32(userIdClaim),
+                        Username = userUsernameClaim,
+                        Password = "",
+                        RoleId = Convert.ToInt32(userRoleIdClaim),
+                        FullName = userFullNameClaim,
+                        PhoneNumber = userPhoneNumberClaim,
+                        CreateAt = userCreateAtClaim != "" ? Convert.ToDateTime(userCreateAtClaim) : null,
+                        UpdateAt = userUpdateAtClaim != "" ? Convert.ToDateTime(userUpdateAtClaim) : null,
+                        IsEnable = true
+                    };
+                    Role role = new Role
+                    {
+                        RoleId = Convert.ToInt32(userRoleIdClaim),
+                        RoleName = userRoleClaim
+                    };
+                    user.Role = role;
+                    return user;
+                }
+                return new User();
+            }
+            catch (Exception ex)
+            {
+                return new User();
             }
         }
     }

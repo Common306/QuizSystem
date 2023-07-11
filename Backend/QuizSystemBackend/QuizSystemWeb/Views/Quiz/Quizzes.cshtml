@@ -26,13 +26,16 @@
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Description</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Start</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">End</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Pass score</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Score</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Creator</th>
                                 <th class="text-secondary opacity-7"></th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach (var quiz in Model)    
+                            @foreach (var quiz in Model)
                             {
+                                bool isDone = false;
                                 <tr>
                                     <td class="align-middle text-sm">
                                         <p class="text-xs font-weight-bold mb-0 ps-3">@quiz.QuizId</p>
@@ -50,12 +53,28 @@
                                         <span class="text-secondary text-xs font-weight-bold">@quiz.EndAt</span>
                                     </td>
                                     <td>
+                                        <p class="text-xs font-weight-bold mb-0">@quiz.PassScore</p>
+                                    </td>
+                                    <td>
+                                        @foreach (var item in ViewBag.takeQuizzes)
+                                        {
+                                            if (item.QuizId == quiz.QuizId && ViewBag.user.UserId == item.UserId)
+                                            {
+                                                isDone = true;
+                                                <p class="text-xs font-weight-bold mb-0">@item.Score</p>
+                                            }
+                                        }
+                                    </td>
+                                    <td>
                                         <p class="text-xs font-weight-bold mb-0">@quiz.Creator.FullName</p>
                                     </td>
                                     <td class="align-middle">
-                                        <a href="../question/doQuiz?quizId=@quiz.QuizId" class="text-info font-weight-bold text-xs" data-toggle="tooltip">
-                                            Take quiz
-                                        </a>
+                                        @if (!isDone)
+                                        {
+                                            <a href="../question/doQuiz?quizId=@quiz.QuizId" class="text-info font-weight-bold text-xs" data-toggle="tooltip">
+                                                Take quiz
+                                            </a>
+                                        }
                                     </td>
                                 </tr>
                             }
