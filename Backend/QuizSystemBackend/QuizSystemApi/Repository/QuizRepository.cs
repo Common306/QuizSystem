@@ -1,4 +1,5 @@
 ﻿using QuizSystemApi.Dao;
+using QuizSystemApi.Dto.Response;
 using QuizSystemApi.Models;
 using QuizSystemApi.Repository.IRepository;
 
@@ -38,7 +39,7 @@ namespace QuizSystemApi.Repository
         {
             return QuizDao.ListResults(id, user);
         }
-        public List<TakeAnswer> ReviewQuiz(int id, User user)
+        public ReviewQuizDtoResponse ReviewQuiz(int id, User user)
         {
             return QuizDao.ReviewQuiz(id, user);
         }

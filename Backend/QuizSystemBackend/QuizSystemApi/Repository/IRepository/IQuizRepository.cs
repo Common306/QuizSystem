@@ -1,4 +1,5 @@
-﻿using QuizSystemApi.Models;
+﻿using QuizSystemApi.Dto.Response;
+using QuizSystemApi.Models;
 
 namespace QuizSystemApi.Repository.IRepository
 {
@@ -12,6 +13,6 @@ namespace QuizSystemApi.Repository.IRepository
         public Quiz Update(int id, Quiz quiz, User user);
         public bool Delete(int id, User user);
         public List<TakeQuiz> ListResults(int id, User user);
-        public List<TakeAnswer> ReviewQuiz(int id, User user);
+        public ReviewQuizDtoResponse ReviewQuiz(int id, User user);
     }
 }

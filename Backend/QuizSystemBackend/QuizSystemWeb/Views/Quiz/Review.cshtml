@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "Review Quiz";
+
+    ViewData["SubTitle"] = "Review Quiz";
+    ViewData["ManageQuiz"] = "active";
+
+    Layout = "_Layout";
+}
+<div class="row">
+    <div class="col-12">
+        <div class="card p-4">
+
+            <a class="mb-3 form-control-label text-primary" href="../../quiz/results/@Model.Quiz.QuizId"><i class="ni ni-bold-left"></i> Back</a>
+
+            <div class="border-bottom">
+                <h4 class="text-lg font-weight-bold">@Model.Quiz.Title</h4>
+                <p class="text-xs font-weight-bold"><strong class="text-sm">Start:</strong> @Model.TakeQuiz.StartAt</p>
+                <p class="text-xs font-weight-bold"><strong class="text-sm">Finish:</strong> @Model.TakeQuiz.EndAt</p>
+                <p class="text-xs font-weight-bold">
+                    <strong>Score: </strong>
+                    <span>@Model.TotalScore.ToString("0.00") / @Model.Quiz.PassScore</span>
+                    @if (Model.TotalScore >= Model.Quiz.PassScore)
+                    {
+                        <span style="margin-left: 30px" class="badge bg-gradient-success">Pass</span>
+                    }
+                    else
+                    {
+                        <span style="margin-left: 30px" class="badge bg-gradient-danger">Not Pass</span>
+                    }
+                </p>
+            </div>
+            <div>
+                <ul style="list-style-type: none">
+                    @{
+                        int counter = 1;
+                    }
+                    @foreach (var question in Model.Questions)
+                    {
+                        <li>
+                            <p style="margin-top: 30px" class="fw-bold text-xs font-weight-bold">
+                                Question @(counter++). @question.Content
+                                <span style="margin-left: 20px" class="badge bg-gradient-secondary">@Model.QuestionScore[question.QuestionId].ToString("0.00") / @question.Score.ToString("0.00")</span>
+                            </p>
+                            <div>
+                                @foreach (var answer in question.Answers)
+                                {
+                                    <div class="form-check">
+                                        @if (Model.ReviewAnswer[answer.AnswerId])
+                                        {
+                                            <input class="form-check-input" type="checkbox" checked disabled>
+                                        }
+                                        else
+                                        {
+                                            <input class="form-check-input" type="checkbox" disabled>
+                                        }
+                                        <span class="text-xs font-weight-bold">@answer.Content</span>
+                                        @if (Model.ReviewAnswer[answer.AnswerId])
+                                        {
+                                            @if (answer.IsCorrect)
+                                            {
+                                                <span style="margin-left: 20px" class="text-success fw-bold text-xs font-weight-bold">@answer.IsCorrect</span>
+                                            }
+                                            else
+                                            {
+                                                <span style="margin-left: 20px" class="text-danger fw-bold text-xs font-weight-bold">@answer.IsCorrect</span>
+                                            }
+                                        }
+                                    </div>
+                                }
+                            </div>
+                        </li>
+                    }
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
