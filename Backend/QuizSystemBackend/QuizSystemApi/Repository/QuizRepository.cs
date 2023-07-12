@@ -7,9 +7,9 @@ namespace QuizSystemApi.Repository
 {
     public class QuizRepository : IQuizRepository
     {
-        public List<Quiz> GetAll(User user)
+        public List<Quiz> GetAll(User user, string? search, int? page)
         {
-            return QuizDao.GetAll(user);
+            return QuizDao.GetAll(user, search, page);
         }
         public List<Quiz> GetAll()
         {
@@ -35,14 +35,21 @@ namespace QuizSystemApi.Repository
         {
             return QuizDao.Delete(id, user);
         }
-        public List<TakeQuiz> ListResults(int id, User user)
+        public List<TakeQuiz> ListResults(int id, User user, string? search, int? page)
         {
-            return QuizDao.ListResults(id, user);
+            return QuizDao.ListResults(id, user, search, page);
         }
         public ReviewQuizDtoResponse ReviewQuiz(int id, User user)
         {
             return QuizDao.ReviewQuiz(id, user);
         }
-
+        public int Total(string? search)
+        {
+            return QuizDao.Total(search);
+        }
+        public int TotalQuizResult(int id, string? search)
+        {
+            return QuizDao.TotalQuizResult(id, search);
+        }
     }
 }

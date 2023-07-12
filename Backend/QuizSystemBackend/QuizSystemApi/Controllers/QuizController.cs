@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using QuizSystemApi.Dto.Response;
 using QuizSystemApi.Models;
 using QuizSystemApi.Repository;
@@ -21,10 +22,17 @@ namespace QuizSystemApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll() {
+        public IActionResult GetAll(string? search, int? page) {
             User user = TokenHelper.GetUserFromToken(HttpContext);
-            List<Quiz> quizzes = _quizRepository.GetAll(user);
-            return Ok(quizzes);
+            List<Quiz> quizzes = _quizRepository.GetAll(user, search, page);
+            int total = _quizRepository.Total(search);
+            return Ok(new
+            {
+                Quizzes = quizzes,
+                Total = total,
+                Page = page,
+                PageSize = 10
+            });
         }
 
         [HttpGet]
@@ -70,11 +78,18 @@ namespace QuizSystemApi.Controllers
 
         [HttpGet]
         [Route("results/{id}")]
-        public IActionResult Results(int id)
+        public IActionResult Results(int id, string? search, int? page)
         {
             User user = TokenHelper.GetUserFromToken(HttpContext);
-            List<TakeQuiz> list = _quizRepository.ListResults(id, user);
-            return Ok(list);
+            List<TakeQuiz> list = _quizRepository.ListResults(id, user, search, page);
+            int total = _quizRepository.TotalQuizResult(id, search);
+            return Ok(new
+            {
+                TakeQuizzes = list,
+                Total = total,
+                Page = page,
+                PageSize = 10
+            });
         }
 
         [HttpGet]

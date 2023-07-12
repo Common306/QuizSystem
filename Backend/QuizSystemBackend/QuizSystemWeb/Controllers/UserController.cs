@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using QuizSystemWeb.Dto.Response;
 using QuizSystemWeb.Models;
 using System.Net.Http.Headers;
 using System.Security.Authentication;
@@ -20,7 +21,7 @@ namespace QuizSystemWeb.Controllers
 		}
         [HttpGet]
         [Route("index")]
-		public async Task<IActionResult> Index()
+		public async Task<IActionResult> Index(string? search, int? page)
 		{ 
 			try
 			{
@@ -30,6 +31,16 @@ namespace QuizSystemWeb.Controllers
 					return Unauthorized();
 				}
 				client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                if(search != null && page != null)
+                {
+                    UserApiUrl += "?search=" + search + "&page=" + page;
+                } else if(search != null)
+                {
+                    UserApiUrl += "?search=" + search;
+                } else if(page != null)
+                {
+                    UserApiUrl += "?page=" + page;
+                }
 				HttpResponseMessage response = await client.GetAsync(UserApiUrl);
 				string strData = await response.Content.ReadAsStringAsync();
 
@@ -37,8 +48,13 @@ namespace QuizSystemWeb.Controllers
 				{
 					PropertyNameCaseInsensitive = true
 				};
-				List<User>? users = JsonSerializer.Deserialize<List<User>>(strData, options);
-				return View(users);
+				UserDtoResponse? res = JsonSerializer.Deserialize<UserDtoResponse>(strData, options);
+                ViewData["ValueSearch"] = search;
+                ViewData["Page"] = res.Page;
+                ViewData["Total"] = res.Total;
+                ViewData["PageSize"] = res.PageSize;
+                ViewData["CurrentPage"] = (page == null) ? 1 : page;
+				return View(res.Users);
 			} catch (Exception ex)
 			{
 				return Unauthorized();

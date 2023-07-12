@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using QuizSystemApi.Models;
+using System.Linq;
 
 namespace QuizSystemApi.Dao
 {
@@ -45,13 +46,34 @@ namespace QuizSystemApi.Dao
             }
         }
 
-        public static List<User> GetAll()
+        public static List<User> GetAll(string? search, int? page)
         {
             try
             {
                 using (var context = new DBContext())
                 {
-                    List<User> users = context.Users.Include(x => x.Role).ToList();
+                    List<User> users = new List<User>();
+                    int pageSize = 10;
+                    int pageNumber = (int)(page == null ? 1 : page);
+                    if (search == null)
+                    {
+                        users = context.Users
+                        .Include(x => x.Role)
+                        .Skip((pageNumber - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToList();
+                    } else
+                    {
+                        string valueSearch = search.ToLower().Trim();
+                        users = context.Users.Include(x => x.Role)
+                            .Where(x => x.Username.ToLower().Contains(valueSearch) ||
+                                x.Role.RoleName.ToLower().Contains(valueSearch) ||
+                                x.FullName.ToLower().Contains(valueSearch) ||
+                                x.PhoneNumber.ToLower().Contains(valueSearch)
+                            ).Skip((pageNumber - 1) * pageSize)
+                            .Take(pageSize)
+                            .ToList();
+                    }
                     return users;
                 }
             }
@@ -140,6 +162,30 @@ namespace QuizSystemApi.Dao
                     context.Users.Remove(user);
                     context.SaveChanges();
                     return true;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public static int Total(string? search)
+        {
+            try
+            {
+                using (var context = new DBContext())
+                {
+                    if(search != null)
+                    {
+                        string valueSearch = search.ToLower().Trim();
+                        return context.Users
+                            .Where(x => x.Username.ToLower().Contains(valueSearch) ||
+                                x.Role.RoleName.ToLower().Contains(valueSearch) ||
+                                x.FullName.ToLower().Contains(valueSearch) ||
+                                x.PhoneNumber.ToLower().Contains(valueSearch)).Count();
+                    }
+                    return context.Users.Count();
                 }
             }
             catch (Exception ex)
