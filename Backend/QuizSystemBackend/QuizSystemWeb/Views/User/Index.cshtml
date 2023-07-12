@@ -1,18 +1,22 @@
 ﻿@{
     ViewData["Title"] = "Manage User";
-
+    ViewData["FormSearch"] = "true";
+    ViewData["FormSearchAction"] = "Index";
     ViewData["SubTitle"] = "Manage User";
     ViewData["ManageUser"] = "active";
     ViewData["Controller"] = "User";
     Layout = "_Layout";
 }
-
 <style>
     .cursor-pointer:hover {
         cursor: pointer
     }
-</style>
 
+    .active-page {
+        background-color: #cb0c9f;
+        color: white !important;
+    }
+</style>
 <!-- Modal Add -->
 <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
@@ -238,22 +242,27 @@
         </div>
     </div>
 </div>
-
+@{
+    int total = Convert.ToInt32(ViewData["Total"]);
+    int pageSize = Convert.ToInt32(ViewData["PageSize"]);
+    int pageNumber;
+    if(total % pageSize == 0)
+    {
+        pageNumber = total / pageSize;
+    } else
+    {
+        pageNumber = ((int)total / pageSize) + 1;
+    }
+}
 <nav aria-label="Page navigation example" class="d-flex justify-content-center">
     <ul class="pagination">
-        <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
+        @for (int i = 1; i <= pageNumber; i++)
+        {
+            <li class="page-item">
+                <a class="page-link @(ViewData["CurrentPage"].ToString().Equals(i.ToString()) ? "active-page" : "")"
+                   href="?page=@i@(ViewData["ValueSearch"] != null && !ViewData["ValueSearch"].ToString().Equals("") ? "&search=" + ViewData["ValueSearch"] : "")">@i</a>
+            </li>
+        }
     </ul>
 </nav>
 

@@ -21,7 +21,7 @@ namespace QuizSystemWeb.Controllers
             client.DefaultRequestHeaders.Accept.Add(contentType);
         }
         [Route("index")]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? search, int? page)
         {
             try
             {
@@ -31,6 +31,18 @@ namespace QuizSystemWeb.Controllers
                     return Unauthorized();
                 }
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                if (search != null && page != null)
+                {
+                    QuizApiUrl += "?search=" + search + "&page=" + page;
+                }
+                else if (search != null)
+                {
+                    QuizApiUrl += "?search=" + search;
+                }
+                else if (page != null)
+                {
+                    QuizApiUrl += "?page=" + page;
+                }
                 HttpResponseMessage response = await client.GetAsync(QuizApiUrl);
                 string strData = await response.Content.ReadAsStringAsync();
 
@@ -38,8 +50,13 @@ namespace QuizSystemWeb.Controllers
                 {
                     PropertyNameCaseInsensitive = true
                 };
-                List<Quiz>? quizzes = JsonSerializer.Deserialize<List<Quiz>>(strData, options);
-                return View(quizzes);
+                QuizDtoResponse? res = JsonSerializer.Deserialize<QuizDtoResponse>(strData, options);
+                ViewData["ValueSearch"] = search;
+                ViewData["Page"] = res.Page;
+                ViewData["Total"] = res.Total;
+                ViewData["PageSize"] = res.PageSize;
+                ViewData["CurrentPage"] = (page == null) ? 1 : page;
+                return View(res.Quizzes);
             }
             catch (Exception ex)
             {
@@ -82,6 +99,10 @@ namespace QuizSystemWeb.Controllers
         {
             try
             {
+                if(quiz.IsPublish == null)
+                {
+                    quiz.IsPublish = false;
+                }
                 string? token = Request.Cookies["Token"];
                 if (token == null)
                 {
@@ -111,6 +132,10 @@ namespace QuizSystemWeb.Controllers
         {
             try
             {
+                if (quiz.IsPublish == null)
+                {
+                    quiz.IsPublish = false;
+                }
                 string? token = Request.Cookies["Token"];
                 if (token == null)
                 {
@@ -156,7 +181,7 @@ namespace QuizSystemWeb.Controllers
 
         [HttpGet]
         [Route("results/{id}")]
-        public async Task<IActionResult> Results(int id)
+        public async Task<IActionResult> Results(int id, string? search, int? page)
         {
             try
             {
@@ -166,16 +191,38 @@ namespace QuizSystemWeb.Controllers
                     return Unauthorized();
                 }
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                HttpResponseMessage response = await client.GetAsync(QuizApiUrl + "/results/" + id);
+
+                if (search != null && page != null)
+                {
+                    QuizApiUrl += "/results/" + id + "?search=" + search + "&page=" + page;
+                }
+                else if (search != null)
+                {
+                    QuizApiUrl += "/results/" + id + "?search=" + search;
+                }
+                else if (page != null)
+                {
+                    QuizApiUrl += "/results/" + id + "?page=" + page;
+                } else
+                {
+                    QuizApiUrl += "/results/" + id;
+                }
+                HttpResponseMessage response = await client.GetAsync(QuizApiUrl);
                 string strData = await response.Content.ReadAsStringAsync();
 
                 var options = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true
                 };
-                List<TakeQuiz>? quiz = JsonSerializer.Deserialize<List<TakeQuiz>>(strData, options);
+
+                QuizResultsDtoResponse? res = JsonSerializer.Deserialize<QuizResultsDtoResponse>(strData, options);
                 ViewBag.QuizId = id;
-                return View(quiz);
+                ViewData["ValueSearch"] = search;
+                ViewData["Page"] = res.Page;
+                ViewData["Total"] = res.Total;
+                ViewData["PageSize"] = res.PageSize;
+                ViewData["CurrentPage"] = (page == null) ? 1 : page;
+                return View(res.TakeQuizzes);
             }
             catch (Exception ex)
             {
