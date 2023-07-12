@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using QuizSystemApi;
 using QuizSystemWeb.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
@@ -19,6 +18,7 @@ namespace QuizSystemWeb.Controllers
         private string QuestionApiUrl = "https://localhost:7049/api/question";
         private string AnswerApiUrl = "https://localhost:7049/api/answer";
         private string TakeQuizApiUrl = "https://localhost:7049/api/takeQuiz";
+        private string TakeAnswerApiUrl = "https://localhost:7049/api/takeAnswer";
         public QuestionController()
         {
             client = new HttpClient();
@@ -250,6 +250,50 @@ namespace QuizSystemWeb.Controllers
                 return Unauthorized();
             }
         }
+        
+        //[Route("reviewQuiz")]
+        //public async Task<IActionResult> ReviewQuiz(int quizid)
+        //{
+        //    try
+        //    {
+        //        string? token = Request.Cookies["Token"];
+        //        if (token == null)
+        //        {
+        //            return Unauthorized();
+        //        }
+        //        User user = GetUserFromToken(token);
+        //        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+        //        HttpResponseMessage response = await client.GetAsync(QuizApiUrl + "/student/" + quizid);
+        //        string strData = await response.Content.ReadAsStringAsync();
+
+        //        var options = new JsonSerializerOptions
+        //        {
+        //            PropertyNameCaseInsensitive = true
+        //        };
+
+        //        // get quiz
+        //        Quiz? quiz = JsonSerializer.Deserialize<Quiz>(strData, options);
+
+        //        //get list question of a quiz
+        //        response = await client.GetAsync(QuestionApiUrl + "/student?quizId=" + quizid);
+        //        strData = await response.Content.ReadAsStringAsync();
+        //        List<Question>? questions = JsonSerializer.Deserialize<List<Question>>(strData, options);
+        //        foreach (Question q in questions)
+        //        {
+        //            response = await client.GetAsync(AnswerApiUrl + "/student?questionId=" + q.QuestionId);
+        //            strData = await response.Content.ReadAsStringAsync();
+        //            List<Answer>? answers = JsonSerializer.Deserialize<List<Answer>>(strData, options);
+        //            q.Answers = answers;
+        //        }
+        //        quiz.Questions = questions;
+
+        //        return View(quiz);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        return Unauthorized();
+        //    }
+        //}
 
         [HttpPost]
         [Route("SubmitQuiz")]
@@ -291,14 +335,29 @@ namespace QuizSystemWeb.Controllers
             TakeQuiz takeQuiz = new TakeQuiz();
             takeQuiz.UserId = user.UserId;
             takeQuiz.QuizId = quizId;
-            takeQuiz.StartAt = startAt; 
+            takeQuiz.StartAt = startAt;
             takeQuiz.EndAt = end;
             takeQuiz.Score = score;
             string jsonData = JsonSerializer.Serialize(takeQuiz);
             var content = new StringContent(jsonData, Encoding.UTF8, "application/json");
             response = await client.PostAsync(TakeQuizApiUrl, content);
             strData = await response.Content.ReadAsStringAsync();
-
+            TakeQuiz takeQuizNewest = JsonSerializer.Deserialize<TakeQuiz>(strData, options);
+            List<TakeAnswer> answerList = new List<TakeAnswer>();
+            foreach (var item in keyQuestions)
+            {
+                foreach (var item1 in listQuestion[item.QuestionId.ToString()].ToList())
+                {
+                    TakeAnswer answer = new TakeAnswer();
+                    answer.TakeQuizId = takeQuizNewest.TakeQuizId;
+                    answer.QuestionId = item.QuestionId;
+                    answer.AnswerId = int.Parse(item1);
+                    answerList.Add(answer);
+                }
+            }
+            jsonData = JsonSerializer.Serialize(answerList);
+            content = new StringContent(jsonData, Encoding.UTF8, "application/json");
+            response = await client.PostAsync(TakeAnswerApiUrl, content);
             return RedirectToAction("Quizzes", "Quiz");
         }
 
