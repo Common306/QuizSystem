@@ -5,7 +5,6 @@ namespace QuizSystemApi.Repository.IRepository
 {
     public interface IQuizRepository
     {
-        public List<Quiz> GetAll(User user);
         public List<Quiz> GetAll();
         public List<Quiz> GetAll(User user, string? search, int? Page);
         public Quiz Get(int id, User user);

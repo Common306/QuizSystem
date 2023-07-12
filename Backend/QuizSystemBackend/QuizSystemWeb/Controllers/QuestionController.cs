@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using QuizSystemApi;
 using QuizSystemWeb.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
