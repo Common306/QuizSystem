@@ -222,15 +222,18 @@
                     <h6 class="font-weight-bolder mb-0">@ViewData["SubTitle"]</h6>
                 </nav>
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-                    
+                    @if (ViewData["FormSearch"] != null)
+                    {
                         <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                            <form asp-controller="@ViewData["Controller"]" asp-action="Index" method="get">
+                            <form asp-controller="@ViewData["Controller"]" asp-action="@ViewData["FormSearchAction"]" method="get">
                                 <div class="input-group">
-                                    <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                                    <input type="text" class="form-control" placeholder="Type here..." name="search">
+                                    <span style="z-index: 10" class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                                    <input type="text" class="form-control" placeholder="Type here..." name="search" value="@ViewData["ValueSearch"]">
                                 </div>
                             </form>
                         </div>
+                    }
+                    
                     
 
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">

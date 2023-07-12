@@ -1,7 +1,8 @@
 ﻿@model List<Quiz>
 @{
     ViewData["Title"] = "Manage Quiz";
-
+    ViewData["FormSearch"] = "true";
+    ViewData["FormSearchAction"] = "Index";
     ViewData["SubTitle"] = "Manage Quiz";
     ViewData["ManageQuiz"] = "active";
     ViewData["Controller"] = "Quiz";
@@ -10,6 +11,11 @@
 <style>
     .cursor-pointer:hover {
         cursor: pointer
+    }
+
+    .active-page {
+        background-color: #cb0c9f;
+        color: white !important;
     }
 </style>
 <!-- Modal Add -->
@@ -237,21 +243,28 @@
     </div>
 </div>
 
+@{
+    int total = Convert.ToInt32(ViewData["Total"]);
+    int pageSize = Convert.ToInt32(ViewData["PageSize"]);
+    int pageNumber;
+    if (total % pageSize == 0)
+    {
+        pageNumber = total / pageSize;
+    }
+    else
+    {
+        pageNumber = ((int)total / pageSize) + 1;
+    }
+}
 <nav aria-label="Page navigation example" class="d-flex justify-content-center">
     <ul class="pagination">
-        <li class="page-item">
-            <a class="page-link" href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
-            </a>
-        </li>
-        <li class="page-item"><a class="page-link" href="#">1</a></li>
-        <li class="page-item"><a class="page-link" href="#">2</a></li>
-        <li class="page-item"><a class="page-link" href="#">3</a></li>
-        <li class="page-item">
-            <a class="page-link" href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
-            </a>
-        </li>
+        @for (int i = 1; i <= pageNumber; i++)
+        {
+            <li class="page-item">
+                <a class="page-link @(ViewData["CurrentPage"].ToString().Equals(i.ToString()) ? "active-page" : "")"
+                   href="?page=@i@(ViewData["ValueSearch"] != null && !ViewData["ValueSearch"].ToString().Equals("") ? "&search=" + ViewData["ValueSearch"] : "")">@i</a>
+            </li>
+        }
     </ul>
 </nav>
 

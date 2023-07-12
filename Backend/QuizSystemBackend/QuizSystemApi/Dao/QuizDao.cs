@@ -6,14 +6,34 @@ namespace QuizSystemApi.Dao
 {
     public class QuizDao
     {
-        public static List<Quiz> GetAll(User user)
+        public static List<Quiz> GetAll(User user, string? search, int? page)
         {
             try
             {
                 using (var context = new DBContext())
                 {
-                    List<Quiz> quizzes = context.Quizzes.Include(x => x.Creator)
-                        .Where(x => user.RoleId == 1 || x.CreatorId == user.UserId).ToList();
+                    List<Quiz> quizzes = new List<Quiz>();
+                    int pageSize = 10;
+                    int pageNumber = (int)(page == null ? 1 : page);
+                    if (search == null)
+                    {
+                        quizzes = context.Quizzes.Include(x => x.Creator)
+                        .Where(x => user.RoleId == 1 || x.CreatorId == user.UserId)
+                        .Skip((pageNumber - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToList();
+                    } else
+                    {
+                        string valueSearch = search.ToLower().Trim();
+                        quizzes = context.Quizzes.Include(x => x.Creator)
+                        .Where(x => (user.RoleId == 1 || x.CreatorId == user.UserId)).ToList();
+                            quizzes = quizzes.Where(x => x.Title.ToLower().Contains(valueSearch) ||
+                            x.Description.ToLower().Contains(valueSearch))
+                        .Skip((pageNumber - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToList();
+                    }
+                    
                     return quizzes;
                 }
             }
@@ -110,15 +130,29 @@ namespace QuizSystemApi.Dao
             }
         }
 
-        public static List<TakeQuiz> ListResults(int id, User user)
+        public static List<TakeQuiz> ListResults(int id, User user, string? search, int? page)
         {
             try
             {
                 using (var context = new DBContext())
                 {
+                    int pageSize = 10;
+                    int pageNumber = (int)(page == null ? 1 : page);
                     List<TakeQuiz> takequiz = context.TakeQuizzes
                         .Include(x => x.User).Include(x => x.Quiz)
-                        .Where(x => x.QuizId == id && (user.RoleId == 1 || x.Quiz.CreatorId == user.UserId)).ToList();
+                        .Where(x => x.QuizId == id && (user.RoleId == 1 || x.Quiz.CreatorId == user.UserId))
+                        .ToList();
+                    if(search != null)
+                    {
+                        string valueSearch = search.ToLower().Trim();
+                        takequiz = takequiz.Where(x => x.User.FullName.ToLower().Contains(valueSearch) ||
+                            x.Quiz.Title.ToLower().Contains(valueSearch) ||
+                            x.Score.ToString().Contains(valueSearch)
+                        ).ToList();
+                    }
+                    takequiz = takequiz.Skip((pageNumber - 1) * pageSize)
+                        .Take(pageSize)
+                        .ToList();
                     return takequiz;
                 }
             }
@@ -232,6 +266,58 @@ namespace QuizSystemApi.Dao
                 {
                     Quiz? quiz = context.Quizzes.Include(x => x.Creator).FirstOrDefault(x => x.QuizId == id);
                     return quiz;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public static int Total(string? search)
+        {
+            try
+            {
+                using (var context = new DBContext())
+                {
+                    if (search == null)
+                    {
+                        return context.Quizzes.Count();
+                    }
+                    else
+                    {
+                        string valueSearch = search.ToLower().Trim();
+                        return context.Quizzes.Where(x => x.Title.Contains(valueSearch) ||
+                            x.Description.Contains(valueSearch)).Count();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+        
+        public static int TotalQuizResult(int id, string? search)
+        {
+            try
+            {
+                using (var context = new DBContext())
+                {
+                    if (search == null)
+                    {
+                        return context.TakeQuizzes.Where(x => x.QuizId == id).Count();
+                    }
+                    else
+                    {
+                        string valueSearch = search.ToLower().Trim();
+                        return context.TakeQuizzes.Include(x => x.User).Include(x => x.Quiz).Where(x => x.QuizId == id &&
+                        (
+                            x.User.FullName.ToLower().Contains(valueSearch) ||
+                            x.Quiz.Title.ToLower().Contains(valueSearch) ||
+                            x.Score.ToString().Contains(valueSearch)
+                        )).Count();
+                    }
                 }
             }
             catch (Exception ex)

@@ -42,9 +42,9 @@ namespace QuizSystemApi.Repository
             userRegister.Role = role;
             return userRegister;
         }
-        public List<User> GetAll()
+        public List<User> GetAll(string? search, int? page)
         {
-            return UserDao.GetAll();
+            return UserDao.GetAll(search, page);
         }
         public User Create(User user)
         {
@@ -61,6 +61,11 @@ namespace QuizSystemApi.Repository
         public User Get(int id)
         {
             return UserDao.Get(id);
+        }
+
+        public int Total(string? search)
+        {
+            return UserDao.Total(search);
         }
     }
 }

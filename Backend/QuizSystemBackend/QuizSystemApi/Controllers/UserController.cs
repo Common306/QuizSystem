@@ -19,10 +19,17 @@ namespace QuizSystemApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetList()
+        public IActionResult GetList(string? search, int? page)
         {
-            List<User> users = _userRepository.GetAll();
-            return Ok(users);
+            List<User> users = _userRepository.GetAll(search, page);
+            int total = _userRepository.Total(search);
+            return Ok(new
+            {
+                Users = users,
+                Total = total,
+                Page = page,
+                PageSize = 10
+            });
         }
 
         [HttpGet]
