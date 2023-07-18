@@ -169,7 +169,7 @@ namespace QuizSystemApi.Dao
                 using (var _context = new DBContext())
                 {
                     TakeQuiz? takeQuiz = _context.TakeQuizzes.Include(x => x.Quiz).Include(x => x.User)
-                        .FirstOrDefault(x => x.QuizId == id 
+                        .FirstOrDefault(x => x.TakeQuizId == id 
                         && (user.RoleId == 1 || user.UserId == x.Quiz.CreatorId || user.UserId == x.User.UserId));
 
                     var takeAnswer = _context.TakeAnswers
