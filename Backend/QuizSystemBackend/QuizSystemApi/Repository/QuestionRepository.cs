@@ -35,5 +35,10 @@ namespace QuizSystemApi.Repository
         {
             return QuestionDao.GetKeyOfQuiz(quizId);
         }
+
+        public List<Question> CreateListQuestion(List<Question> questions)
+        {
+            return QuestionDao.CreateListQuestion(questions);
+        }
     }
 }

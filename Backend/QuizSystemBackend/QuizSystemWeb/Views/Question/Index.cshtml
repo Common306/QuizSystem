@@ -19,7 +19,7 @@
 
             <div class="modal-body">
                 <form id="form-add-question">
-                    <input type="hidden" id="quizId" value="@Model.QuizId">
+                    <input type="hidden" id="quizId" value="@Model.QuizId" />
                     <div class="mb-3">
                         <label for="questionContent" class="form-control-label">
                             Content <span class="text-danger">*</span>
@@ -109,12 +109,23 @@
             <div class="card mb-4">
                 <div class="card-header pb-0">
                     <a class="form-control-label text-primary" href="../../quiz/index"><i class="ni ni-bold-left"></i> Back</a>
+                    <p class="text-success text-sm">@ViewData["MessageImport"]</p>
                     <h2>@Model.Title</h2>
                     <button class="btn btn-icon btn-3 btn-primary" type="button" data-bs-toggle="modal"
                             data-bs-target="#addQuestion">
                         <span class="btn-inner--icon"><i class="ni ni-fat-add "></i></span>
                         <span class="btn-inner--text">Create question</span>
                     </button>
+                </div>
+
+                <div class="ml-3 font-weight-bolder" style="margin-left: 30px;">
+                    <a class="nav-link text-xs mb-3" href="download">Download template <i class="fa-solid fa-download"></i></a>
+                    <form asp-controller="Question" asp-action="ImportQuestion" method="post" enctype="multipart/form-data">
+                        <input type="number" name="quizId" value="@Model.QuizId" hidden />
+                        <p class="nav-link text-xs" href="#">Import question <i class="fa-solid fa-file-import"></i> :  <input type="file" name="file" /></p>
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </form>
+
                 </div>
 
                 <form class="p-4">

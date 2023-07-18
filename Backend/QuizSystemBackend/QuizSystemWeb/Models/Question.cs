@@ -9,7 +9,7 @@ namespace QuizSystemWeb.Models
         {
             Answers = new HashSet<Answer>();
         }
-
+        
         public int QuestionId { get; set; }
         public string? Content { get; set; }
         public double? Score { get; set; }
