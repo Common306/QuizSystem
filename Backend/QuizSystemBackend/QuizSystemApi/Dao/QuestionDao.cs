@@ -122,5 +122,22 @@ namespace QuizSystemApi.Dao
                 throw new Exception(ex.Message);
             }
         }
+
+        public static List<Question> CreateListQuestion(List<Question> questions)
+        {
+            try
+            {
+                using (var context = new DBContext())
+                {
+                    context.Questions.AddRange(questions);
+                    context.SaveChanges();
+                    return questions;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

@@ -73,5 +73,13 @@ namespace QuizSystemApi.Controllers
             List<Question> questions = _questionRepository.GetListByQuizId(quizId);
             return Ok(questions);
         }
+
+        [HttpPost]
+        [Route("createList")]
+        public IActionResult CreateListQuestion(List<Question> questions)
+        {
+            List<Question> res = _questionRepository.CreateListQuestion(questions);
+            return Ok(res);
+        }
     }
 }

@@ -10,5 +10,6 @@ namespace QuizSystemApi.Repository.IRepository
         public Question Create(Question question);
         public Question Update(int id, Question question, User user);
         public bool Delete(int id, User user);
+        public List<Question> CreateListQuestion(List<Question> questions);
     }
 }
