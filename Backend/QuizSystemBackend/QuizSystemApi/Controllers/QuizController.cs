@@ -25,7 +25,7 @@ namespace QuizSystemApi.Controllers
         public IActionResult GetAll(string? search, int? page) {
             User user = TokenHelper.GetUserFromToken(HttpContext);
             List<Quiz> quizzes = _quizRepository.GetAll(user, search, page);
-            int total = _quizRepository.Total(search);
+            int total = _quizRepository.Total(user, search);
             return Ok(new
             {
                 Quizzes = quizzes,
@@ -82,7 +82,7 @@ namespace QuizSystemApi.Controllers
         {
             User user = TokenHelper.GetUserFromToken(HttpContext);
             List<TakeQuiz> list = _quizRepository.ListResults(id, user, search, page);
-            int total = _quizRepository.TotalQuizResult(id, search);
+            int total = _quizRepository.TotalQuizResult(id, user, search);
             return Ok(new
             {
                 TakeQuizzes = list,

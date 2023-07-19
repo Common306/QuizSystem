@@ -14,7 +14,7 @@ namespace QuizSystemApi.Repository.IRepository
         public bool Delete(int id, User user);
         public List<TakeQuiz> ListResults(int id, User user, string? search, int? page);
         public ReviewQuizDtoResponse ReviewQuiz(int id, User user);
-        public int Total(string? page);
-        public int TotalQuizResult(int id, string? search);
+        public int Total(User user, string? page);
+        public int TotalQuizResult(int id, User user, string? search);
     }
 }

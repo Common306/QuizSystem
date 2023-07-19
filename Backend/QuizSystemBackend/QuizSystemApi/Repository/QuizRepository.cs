@@ -43,13 +43,13 @@ namespace QuizSystemApi.Repository
         {
             return QuizDao.ReviewQuiz(id, user);
         }
-        public int Total(string? search)
+        public int Total(User user,string? search)
         {
-            return QuizDao.Total(search);
+            return QuizDao.Total(user, search);
         }
-        public int TotalQuizResult(int id, string? search)
+        public int TotalQuizResult(int id, User user, string? search)
         {
-            return QuizDao.TotalQuizResult(id, search);
+            return QuizDao.TotalQuizResult(id, user, search);
         }
     }
 }

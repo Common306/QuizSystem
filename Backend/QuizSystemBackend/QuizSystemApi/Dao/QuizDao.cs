@@ -274,7 +274,7 @@ namespace QuizSystemApi.Dao
             }
         }
 
-        public static int Total(string? search)
+        public static int Total(User user, string? search)
         {
             try
             {
@@ -282,13 +282,16 @@ namespace QuizSystemApi.Dao
                 {
                     if (search == null)
                     {
-                        return context.Quizzes.Count();
+                        return context.Quizzes.Where(x => user.RoleId == 1 || x.CreatorId == user.UserId).Count();
                     }
                     else
                     {
                         string valueSearch = search.ToLower().Trim();
-                        return context.Quizzes.Where(x => x.Title.Contains(valueSearch) ||
-                            x.Description.Contains(valueSearch)).Count();
+                        return context.Quizzes
+                            .Where(x => x.Title.Contains(valueSearch) ||
+                            x.Description.Contains(valueSearch))
+                            .Where(x => user.RoleId == 1 || x.CreatorId == user.UserId)
+                            .Count();
                     }
                 }
             }
@@ -298,7 +301,7 @@ namespace QuizSystemApi.Dao
             }
         }
         
-        public static int TotalQuizResult(int id, string? search)
+        public static int TotalQuizResult(int id, User user, string? search)
         {
             try
             {
@@ -306,12 +309,17 @@ namespace QuizSystemApi.Dao
                 {
                     if (search == null)
                     {
-                        return context.TakeQuizzes.Where(x => x.QuizId == id).Count();
+                        return context.TakeQuizzes
+                            .Where(x => user.RoleId == 1 || x.UserId == user.UserId)
+                            .Where(x => x.QuizId == id)
+                            .Count();
                     }
                     else
                     {
                         string valueSearch = search.ToLower().Trim();
-                        return context.TakeQuizzes.Include(x => x.User).Include(x => x.Quiz).Where(x => x.QuizId == id &&
+                        return context.TakeQuizzes.Include(x => x.User).Include(x => x.Quiz)
+                            .Where(x => user.RoleId == 1 || x.UserId == user.UserId)
+                            .Where(x => x.QuizId == id &&
                         (
                             x.User.FullName.ToLower().Contains(valueSearch) ||
                             x.Quiz.Title.ToLower().Contains(valueSearch) ||
