@@ -1,10 +1,11 @@
 ﻿@model IEnumerable<QuizSystemWeb.Models.Quiz>
 @{
-    ViewData["Title"] = "List Quiz";
-
-    ViewData["SubTitle"] = "List Quiz";
+    ViewData["Title"] = "Manage Quiz";
+    ViewData["FormSearch"] = "true";
+    ViewData["FormSearchAction"] = "Quizzes";
+    ViewData["SubTitle"] = "Manage Quiz";
     ViewData["ManageQuiz"] = "active";
-
+    ViewData["Controller"] = "Quiz";
     Layout = "_Layout";
 }
 <div class="row">
@@ -32,7 +33,7 @@
                                 <th class="text-secondary opacity-7"></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody">
                             @foreach (var quiz in Model)
                             {
                                 bool isDone = false;
@@ -75,13 +76,71 @@
                                                 Take quiz
                                             </a>
                                         }
+                                        else
+                                        {
+                                            @foreach (var item in ViewBag.takeQuizzes)
+                                            {
+                                                if (item.QuizId == quiz.QuizId && ViewBag.user.UserId == item.UserId)
+                                                {
+                                                    <a href="../quiz/review/@item.TakeQuizId" class="text-info font-weight-bold text-xs" data-toggle="tooltip">
+                                                        Review
+                                                    </a>
+                                                }
+                                            }
+                                        }
                                     </td>
                                 </tr>
                             }
                         </tbody>
                     </table>
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center" id="pagination-container" style="margin-top: 1rem;"></ul>
+                    </nav>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<script>
+    function paginateTable(pageNum) {
+        var itemsPerPage = 10; // Số mục hiển thị trên mỗi trang
+        var startIndex = (pageNum - 1) * itemsPerPage;
+        var endIndex = startIndex + itemsPerPage;
+        var tableRows = document.querySelectorAll("#myTable tbody tr");
+        var buttons = document.getElementsByClassName("page-link");
+        for (var i = 0; i < buttons.length; i++) {
+            buttons[i].classList.remove("active");
+        }
+        document.getElementById(`page-${pageNum}`).classList.add("active");
+        for (var i = 0; i < tableRows.length; i++) {
+            if (i >= startIndex && i < endIndex) {
+                tableRows[i].style.display = "table-row";
+            } else {
+                tableRows[i].style.display = "none";
+            }
+        }
+    }
+
+    // Khởi tạo phân trang
+    function initializePagination() {
+        var totalRows = document.querySelectorAll("#myTable tbody tr").length;
+        var itemsPerPage = 10; // Số mục hiển thị trên mỗi trang
+        var totalPages = Math.ceil(totalRows / itemsPerPage);
+
+        var paginationContainer = document.getElementById("pagination-container");
+        paginationContainer.innerHTML = ""; // Xóa các thẻ con
+
+        for (var i = 1; i <= totalPages; i++) {
+            var pageLink = document.createElement("li");
+            pageLink.innerHTML = `<a class="page-link" id="page-${i}" href="#" onclick="paginateTable(${i})" style=" height: 35px; width: 35px; border-radius: 50%; ${i != 1 ? 'margin-left: 8px;' : ''}">${i}</a>`;
+            paginationContainer.appendChild(pageLink);
+        }
+
+        paginateTable(1); // Hiển thị trang đầu tiên khi tải lần đầu
+    }
+
+    // Gọi hàm khởi tạo phân trang khi trang đã tải xong
+    document.addEventListener("DOMContentLoaded", function () {
+        initializePagination();
+    });
+</script>
