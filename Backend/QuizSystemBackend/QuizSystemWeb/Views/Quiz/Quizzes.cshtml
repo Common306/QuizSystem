@@ -72,9 +72,18 @@
                                     <td class="align-middle">
                                     @if (!isDone)
                                     {
-                                            <a href="#" onclick="openPasswordConfirmation(@quiz.QuizCode, '../question/doQuiz?quizId=@quiz.QuizId')" class="text-info font-weight-bold text-xs" data-toggle="tooltip">
-                                                Take quiz
-                                            </a>
+                                        if (quiz.QuizCode == null)
+                                        {
+                                                <a href="../question/doQuiz?quizId=@quiz.QuizId" class="text-info font-weight-bold text-xs" data-toggle="tooltip">
+                                                    Take quiz
+                                                </a>
+                                        }
+                                        else
+                                        {
+                                                <a href="#" onclick="openPasswordConfirmation(@quiz.QuizCode, '../question/doQuiz?quizId=@quiz.QuizId')" class="text-info font-weight-bold text-xs" data-toggle="tooltip">
+                                                    Take quiz
+                                                </a>
+                                        }
                                     }
                                     else
                                     {
