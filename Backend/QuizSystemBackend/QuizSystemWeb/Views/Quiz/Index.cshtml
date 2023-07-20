@@ -40,7 +40,7 @@
                         <label for="quizDescription" class="form-control-label">
                             Description <span class="text-danger">*</span>
                         </label>
-                        <textarea class="form-control" id="quizDescription" rows="3" name="Description"></textarea>
+                        <textarea class="form-control" id="quizDescription" rows="3" name="Description" required></textarea>
                     </div>
 
                     <div class="mb-3">
@@ -54,15 +54,15 @@
 
                     <div class="mb-3">
                         <label for="dateStart" class="form-control-label">
-                            Start Time<span class="text-danger">*</span>
+                            Start Time
                         </label>
-                        <input id="dateStart" class="form-control" type="datetime" value="@DateTime.Now" name="StartAt">
+                        <input id="dateStart" class="form-control" type="datetime-local" value="@DateTime.Now" name="StartAt">
                     </div>
                     <div class="mb-3">
                         <label for="dateEnd" class="form-control-label">
-                            End Time <span class="text-danger">*</span>
+                            End Time
                         </label>
-                        <input id="dateEnd" class="form-control" type="datetime" value="@DateTime.Now" name="EndAt">
+                        <input id="dateEnd" class="form-control" type="datetime-local" value="@DateTime.Now" name="EndAt">
                     </div>
                     <div class="mb-3">
                         <label for="passScore" class="form-control-label">
@@ -115,7 +115,7 @@
                         <label for="editQuizDescription" class="form-control-label">
                            Description <span class="text-danger">*</span>
                         </label>
-                        <textarea class="form-control" id="qDescription" rows="3" name="Description"></textarea>
+                        <textarea class="form-control" id="qDescription" rows="3" name="Description" required></textarea>
                     </div>
                     <div class="mb-3">
                         <div class="form-check">
@@ -125,15 +125,15 @@
                     </div>
                     <div class="mb-3">
                         <label for="q.StartAt" class="form-control-label">
-                            Date start <span class="text-danger">*</span>
+                            Date start
                         </label>
-                        <input id="qStartAt" class="form-control datepicker" type="datetime" name="StartAt" required>
+                        <input id="qStartAt" class="form-control datepicker" type="datetime-local" name="StartAt">
                     </div>
                     <div class="mb-3">
                         <label for="qEndAt" class="form-control-label">
-                            Date end <span class="text-danger">*</span>
+                            Date end
                         </label>
-                        <input id="qEndAt" class="form-control datepicker" type="datetime" name="EndAt" required>
+                        <input id="qEndAt" class="form-control datepicker" type="datetime-local" name="EndAt">
                     </div>
                     <div class="mb-3">
                         <label for="editPassScore" class="form-control-label">
@@ -272,8 +272,7 @@
     <script>
 
         $(".edit-quiz").on('click', function () {
-            let quiz = $(this);
-            console.log(quiz);
+            let quiz = $(this);                
 
             $("#qQuizId").val(quiz.attr("data-quiz-id"));
             $("#qTitle").val(quiz.attr("data-quiz-title"));
@@ -285,8 +284,16 @@
             } else {
                 $("#qPublish").prop("checked", false);
             }
-            $("#qStartAt").val(quiz.attr("data-quiz-start"));
-            $("#qEndAt").val(quiz.attr("data-quiz-end"));
+            if (quiz.attr("data-quiz-start") != "") {
+                var dateStart = new Date(quiz.attr("data-quiz-start"));
+                var formattedDateTimeStart = dateStart.toISOString().slice(0, 16);
+                $("#qStartAt").val(formattedDateTimeStart);
+            }
+            if (quiz.attr("data-quiz-end") != "") {
+                var dateEnd = new Date(quiz.attr("data-quiz-end"));
+                var formattedDateTimeEnd = dateEnd.toISOString().slice(0, 16);
+                $("#qEndAt").val(formattedDateTimeEnd);
+            }
             $("#qPassScore").val(quiz.attr("data-quiz-score"));
             $("#qQuizCode").val(quiz.attr("data-quiz-code"));
             $("#editQuizModal").modal("show");

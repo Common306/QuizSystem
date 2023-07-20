@@ -182,18 +182,6 @@
                                         </div>
                                     }
                                 </div>
-
-
-                                
-                                @*<i class="fa-solid fa-pen text-info icon-edit"
-                                   data-question-id="@question.QuestionId"
-                                   data-question-content="@question.Content"
-                                   data-question-score="@question.Score"
-                                   data-question-answersId="@answersId"
-                                   data-question-marks="@marks"
-                                   data-question-answers="@answers"></i>
-                                |
-                                <i class="fa-solid fa-trash text-danger" onclick="deleteQuestionById(@question.QuestionId, this)"></i>*@
                                 <div class="ms-auto text-end">
                                     <span class="btn btn-link text-dark px-3 mb-0 icon-edit" href="javascript:;"
                                        data-question-id="@question.QuestionId"
@@ -213,19 +201,7 @@
                             @{
                                 i++;
                             }
-                            @*<div style="padding-left: 15px">
-                                @foreach (Answer ans in question.Answers)
-                                {
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" value="" @(ans.IsCorrect == true ? "checked" : "") disabled>
-                                        <label class="custom-control-label">@ans.Content</label>
-                                    </div>
-                                }
-                            </div>*@
                         </div>
-
-                        
-
                     }
                 </form>
             </div>
