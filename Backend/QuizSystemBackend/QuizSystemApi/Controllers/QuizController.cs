@@ -93,6 +93,7 @@ namespace QuizSystemApi.Controllers
         }
 
         [HttpGet]
+        [AllowAnonymous]
         [Route("review/{id}")]
         public IActionResult ReviewQuiz(int id) {
             User user = TokenHelper.GetUserFromToken(HttpContext);

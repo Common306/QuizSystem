@@ -70,7 +70,7 @@ namespace QuizSystemWeb.Controllers
 
         }
         [Route("quizzes")]
-        public async Task<IActionResult> Quizzes()
+        public async Task<IActionResult> Quizzes(string search)
         {
             try
             {
@@ -94,6 +94,18 @@ namespace QuizSystemWeb.Controllers
                 List<TakeQuiz>? takeQuizzes = JsonSerializer.Deserialize<List<TakeQuiz>>(strData, options);
                 ViewBag.takeQuizzes = takeQuizzes;
                 ViewBag.user = user;
+                if (search != null)
+                {
+                    List<Quiz> filteredQuizzes = new List<Quiz>();
+                    foreach (var quiz in quizzes)
+                    {
+                        if (quiz.Title.ToLower().Contains(search.Trim().ToLower()) || quiz.Creator.FullName.ToLower().Contains(search.Trim().ToLower()))
+                        {
+                            filteredQuizzes.Add(quiz);
+                        }
+                    }
+                    return View(filteredQuizzes);
+                }
                 return View(quizzes);
             }
             catch (Exception ex)
@@ -137,7 +149,7 @@ namespace QuizSystemWeb.Controllers
         {
             try
             {
-                if(quiz.IsPublish == null)
+                if (quiz.IsPublish == null)
                 {
                     quiz.IsPublish = false;
                 }
@@ -241,7 +253,8 @@ namespace QuizSystemWeb.Controllers
                 else if (page != null)
                 {
                     QuizApiUrl += "/results/" + id + "?page=" + page;
-                } else
+                }
+                else
                 {
                     QuizApiUrl += "/results/" + id;
                 }
@@ -279,6 +292,7 @@ namespace QuizSystemWeb.Controllers
                 {
                     return Unauthorized();
                 }
+                User user = GetUserFromToken(token);
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
                 HttpResponseMessage response = await client.GetAsync(QuizApiUrl + "/review/" + id);
                 string strData = await response.Content.ReadAsStringAsync();
@@ -288,7 +302,7 @@ namespace QuizSystemWeb.Controllers
                     PropertyNameCaseInsensitive = true
                 };
                 ReviewQuizDtoResponse? review = JsonSerializer.Deserialize<ReviewQuizDtoResponse>(strData, options);
-                
+                ViewBag.user = user;
                 return View(review);
             }
             catch (Exception ex)

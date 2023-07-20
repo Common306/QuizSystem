@@ -9,8 +9,14 @@
 <div class="row">
     <div class="col-12">
         <div class="card p-4">
-
-            <a class="mb-3 form-control-label text-primary" href="../../quiz/results/@Model.Quiz.QuizId"><i class="ni ni-bold-left"></i> Back</a>
+            @if (ViewBag.user.RoleId == 3)
+            {
+                <a class="mb-3 form-control-label text-primary" href="../../quiz/quizzes"><i class="ni ni-bold-left"></i> Back</a>
+            }
+            else
+            {
+                <a class="mb-3 form-control-label text-primary" href="../../quiz/results/@Model.Quiz.QuizId"><i class="ni ni-bold-left"></i> Back</a>
+            }
 
             <div class="border-bottom">
                 <h4 class="text-lg font-weight-bold">@Model.Quiz.Title</h4>
