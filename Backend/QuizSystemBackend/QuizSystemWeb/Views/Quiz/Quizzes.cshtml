@@ -34,9 +34,9 @@
                             </tr>
                         </thead>
                         <tbody">
-                            @foreach (var quiz in Model)
-                            {
-                                bool isDone = false;
+                        @foreach (var quiz in Model)
+                        {
+                            bool isDone = false;
                                 <tr>
                                     <td class="align-middle text-sm">
                                         <p class="text-xs font-weight-bold mb-0 ps-3">@quiz.QuizId</p>
@@ -57,41 +57,41 @@
                                         <p class="text-xs font-weight-bold mb-0">@quiz.PassScore</p>
                                     </td>
                                     <td>
-                                        @foreach (var item in ViewBag.takeQuizzes)
+                                    @foreach (var item in ViewBag.takeQuizzes)
+                                    {
+                                        if (item.QuizId == quiz.QuizId && ViewBag.user.UserId == item.UserId)
                                         {
-                                            if (item.QuizId == quiz.QuizId && ViewBag.user.UserId == item.UserId)
-                                            {
-                                                isDone = true;
+                                            isDone = true;
                                                 <p class="text-xs font-weight-bold mb-0">@item.Score</p>
-                                            }
                                         }
+                                    }
                                     </td>
                                     <td>
                                         <p class="text-xs font-weight-bold mb-0">@quiz.Creator.FullName</p>
                                     </td>
                                     <td class="align-middle">
-                                        @if (!isDone)
-                                        {
-                                            <a href="../question/doQuiz?quizId=@quiz.QuizId" class="text-info font-weight-bold text-xs" data-toggle="tooltip">
+                                    @if (!isDone)
+                                    {
+                                            <a href="#" onclick="openPasswordConfirmation(@quiz.QuizCode, '../question/doQuiz?quizId=@quiz.QuizId')" class="text-info font-weight-bold text-xs" data-toggle="tooltip">
                                                 Take quiz
                                             </a>
-                                        }
-                                        else
+                                    }
+                                    else
+                                    {
+                                        @foreach (var item in ViewBag.takeQuizzes)
                                         {
-                                            @foreach (var item in ViewBag.takeQuizzes)
+                                            if (item.QuizId == quiz.QuizId && ViewBag.user.UserId == item.UserId)
                                             {
-                                                if (item.QuizId == quiz.QuizId && ViewBag.user.UserId == item.UserId)
-                                                {
                                                     <a href="../quiz/review/@item.TakeQuizId" class="text-info font-weight-bold text-xs" data-toggle="tooltip">
                                                         Review
                                                     </a>
-                                                }
                                             }
                                         }
+                                    }
                                     </td>
                                 </tr>
-                            }
-                        </tbody>
+                        }
+                            </tbody>
                     </table>
                     <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-center" id="pagination-container" style="margin-top: 1rem;"></ul>
@@ -101,7 +101,54 @@
         </div>
     </div>
 </div>
+
+<!-- Popup xác nhận mật khẩu -->
+<div class="modal" id="passwordConfirmationModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Header của popup -->
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm Password</h4>
+            </div>
+
+            <!-- Nội dung của popup -->
+            <div class="modal-body">
+                <p>Please enter your password to continue:</p>
+                <input type="password" id="passwordInput" class="form-control">
+            </div>
+
+            <!-- Footer của popup -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="checkPassword()">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
 <script>
+    let code = "";
+    let link = "";
+    function openPasswordConfirmation(code1, link1) {
+        code = code1;
+        link = link1;
+        // Hiển thị popup
+        $('#passwordConfirmationModal').modal('show');
+        document.getElementById('passwordInput').value = '';
+    }
+
+    function checkPassword() {
+        // Lấy giá trị của ô input
+        var password = document.getElementById('passwordInput').value;
+
+        // Kiểm tra xác nhận mật khẩu ở đây
+        // Trong ví dụ này, chúng ta chỉ in ra màn hình để kiểm tra
+        if (password == code) {
+            window.location.href = link;
+        }
+
+        // Đóng popup
+        $('#passwordConfirmationModal').modal('hide');
+    }
+
     function paginateTable(pageNum) {
         var itemsPerPage = 10; // Số mục hiển thị trên mỗi trang
         var startIndex = (pageNum - 1) * itemsPerPage;
