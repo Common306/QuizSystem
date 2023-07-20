@@ -441,75 +441,76 @@ namespace QuizSystemWeb.Controllers
         [Route("import")]
         public async Task<IActionResult> ImportQuestionAsync(IFormFile file, int quizId)
         {
-            if (file == null || file.Length <= 0)
+            try
             {
-                return BadRequest("No file uploaded.");
-            }
-
-            // Lưu file Excel vào địa chỉ tạm thời trên server
-            var filePath = Path.GetTempFileName();
-            using (var stream = new FileStream(filePath, FileMode.Create))
-            {
-                file.CopyTo(stream);
-            }
-
-            using (var package = new ExcelPackage(new FileInfo(filePath)))
-            {
-                var worksheet = package.Workbook.Worksheets[0];
-                var rowCount = worksheet.Dimension.Rows;
-                var columnCount = worksheet.Dimension.Columns;
-
-                Dictionary<int, Question> list = new Dictionary<int, Question>();
-
-                for (int row = 2; row <= rowCount; row++) // Bắt đầu từ row 2 vì row 1 là header
+                if (file == null || file.Length <= 0)
                 {
-                    // Đọc dữ liệu từ các cột tương ứng
-                    int no = Convert.ToInt32(worksheet.Cells[row, 1].Value);
-                    string? contentQuestion = Convert.ToString(worksheet.Cells[row, 2].Value);
-                    int score = Convert.ToInt32(worksheet.Cells[row, 3].Value);
-                    string? contentAnswer = Convert.ToString(worksheet.Cells[row, 4].Value);
-                    bool isCorrect = Convert.ToBoolean(worksheet.Cells[row, 5].Value);
-
-                    if (list.ContainsKey(no))
-                    {
-                        Question question = list[no] as Question;
-                        // Tạo thêm 1 answer
-                        Answer answer = new Answer
-                        {
-                            Content = contentAnswer,
-                            IsCorrect = isCorrect,
-                            IsActive = true,
-                            QuestionId = question.QuestionId
-                        };
-                        question.Answers.Add(answer);
-                    }
-                    else
-                    {
-                        Question question = new Question
-                        {
-                            Content = contentQuestion,
-                            Score = score,
-                            MultipleChoice = true,
-                            QuizId = quizId,
-                            IsActive = true
-                        };
-                        Answer answer = new Answer
-                        {
-                            Content = contentAnswer,
-                            IsCorrect = isCorrect,
-                            IsActive = true,
-                            QuestionId = question.QuestionId
-                        };
-                        question.Answers.Add(answer);
-
-                        list.Add(no, question);
-                    }
-
+                    return BadRequest("No file uploaded.");
                 }
 
-                
-                try
+                // Lưu file Excel vào địa chỉ tạm thời trên server
+                var filePath = Path.GetTempFileName();
+                using (var stream = new FileStream(filePath, FileMode.Create))
                 {
+                    file.CopyTo(stream);
+                }
+
+                using (var package = new ExcelPackage(new FileInfo(filePath)))
+                {
+                    var worksheet = package.Workbook.Worksheets[0];
+                    var rowCount = worksheet.Dimension.Rows;
+                    var columnCount = worksheet.Dimension.Columns;
+
+                    Dictionary<int, Question> list = new Dictionary<int, Question>();
+
+                    for (int row = 2; row <= rowCount; row++) // Bắt đầu từ row 2 vì row 1 là header
+                    {
+                        // Đọc dữ liệu từ các cột tương ứng
+                        int no = Convert.ToInt32(worksheet.Cells[row, 1].Value);
+                        string? contentQuestion = Convert.ToString(worksheet.Cells[row, 2].Value);
+                        int score = Convert.ToInt32(worksheet.Cells[row, 3].Value);
+                        string? contentAnswer = Convert.ToString(worksheet.Cells[row, 4].Value);
+                        bool isCorrect = Convert.ToBoolean(worksheet.Cells[row, 5].Value);
+
+                        if (list.ContainsKey(no))
+                        {
+                            Question question = list[no] as Question;
+                            // Tạo thêm 1 answer
+                            Answer answer = new Answer
+                            {
+                                Content = contentAnswer,
+                                IsCorrect = isCorrect,
+                                IsActive = true,
+                                QuestionId = question.QuestionId
+                            };
+                            question.Answers.Add(answer);
+                        }
+                        else
+                        {
+                            Question question = new Question
+                            {
+                                Content = contentQuestion,
+                                Score = score,
+                                MultipleChoice = true,
+                                QuizId = quizId,
+                                IsActive = true
+                            };
+                            Answer answer = new Answer
+                            {
+                                Content = contentAnswer,
+                                IsCorrect = isCorrect,
+                                IsActive = true,
+                                QuestionId = question.QuestionId
+                            };
+                            question.Answers.Add(answer);
+
+                            list.Add(no, question);
+                        }
+
+                    }
+
+
+
                     string? token = Request.Cookies["Token"];
                     if (token == null)
                     {
@@ -519,7 +520,7 @@ namespace QuizSystemWeb.Controllers
 
                     // create a question
                     List<Question> listQuestion = new List<Question>();
-                    foreach(Question q in list.Values)
+                    foreach (Question q in list.Values)
                     {
                         listQuestion.Add(q);
                     }
@@ -536,20 +537,18 @@ namespace QuizSystemWeb.Controllers
                         PropertyNameCaseInsensitive = true
                     };
                     List<Question>? newQuestion = JsonSerializer.Deserialize<List<Question>>(strData, options);
-                    TempData["message"] = "Import question successfully!";
+                    TempData["message"] = "success";
+
+                    System.IO.File.Delete(filePath);
+
+                    // Trả về Dictionary chứa dữ liệu đã đọc
+                    return RedirectToAction("Index", new { quizid = quizId });
                 }
-                catch (Exception ex)
-                {
-                    TempData["message"] = "Import question failed!";
-                    throw new AuthenticationException("You dont have permisstion");
-                }
-
-
-
-                System.IO.File.Delete(filePath);
-
-                // Trả về Dictionary chứa dữ liệu đã đọc
-                return RedirectToAction("Index", new { quizid = quizId});
+            }
+            catch (Exception ex)
+            {
+                TempData["message"] = "fail";
+                return RedirectToAction("Index", new { quizid = quizId });
             }
         }
     }

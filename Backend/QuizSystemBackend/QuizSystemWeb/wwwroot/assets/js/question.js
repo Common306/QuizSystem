@@ -82,7 +82,7 @@ function deleteQuestionById(id, btn) {
                         url: `https://localhost:7017/question/delete/${id}`,
                         type: 'DELETE',
                         success: function (data, textStatus, jqXHR) {
-                            $(btn).closest('div').fadeOut("slow");
+                            $(btn).closest('.form-group').fadeOut("slow");
                         },
                     });
                 }

@@ -71,7 +71,7 @@ namespace QuizSystemApi.Dao
             {
                 using (var context = new DBContext())
                 {
-                    Question? question = context.Questions.FirstOrDefault(x => x.QuestionId == id && (user.Role.RoleId == 1 || x.Quiz.CreatorId == user.UserId));
+                    Question? question = context.Questions.Include(x => x.Quiz).FirstOrDefault(x => x.QuestionId == id && (user.RoleId == 1 || x.Quiz.CreatorId == user.UserId));
                     if (question == null)
                     {
                         return false;

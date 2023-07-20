@@ -109,7 +109,17 @@
             <div class="card mb-4">
                 <div class="card-header pb-0">
                     <a class="form-control-label text-primary" href="../../quiz/index"><i class="ni ni-bold-left"></i> Back</a>
-                    <p class="text-success text-sm">@ViewData["MessageImport"]</p>
+                    @{
+                        string? message = ViewData["MessageImport"] as string;
+                    }
+                    @if (message == "success")
+                    {
+                        <p class="text-success text-sm">IMPORT QUESTION SUCCESSFULLY!!!</p>
+                    }
+                    else if (message == "fail")
+                    {
+                        <p class="text-danger text-sm">IMPORT QUESTION FAILED!!!</p>
+                    }
                     <h2>@Model.Title</h2>
                     <button class="btn btn-icon btn-3 btn-primary" type="button" data-bs-toggle="modal"
                             data-bs-target="#addQuestion">
@@ -122,7 +132,7 @@
                     <a class="nav-link text-xs mb-3" href="download">Download template <i class="fa-solid fa-download"></i></a>
                     <form asp-controller="Question" asp-action="ImportQuestion" method="post" enctype="multipart/form-data">
                         <input type="number" name="quizId" value="@Model.QuizId" hidden />
-                        <p class="nav-link text-xs" href="#">Import question <i class="fa-solid fa-file-import"></i> :  <input type="file" name="file" /></p>
+                        <p class="nav-link text-xs" href="#">Import question <i class="fa-solid fa-file-import"></i> :  <input type="file" name="file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" /></p>
                         <button class="btn btn-primary" type="submit">Submit</button>
                     </form>
 
@@ -159,9 +169,23 @@
                         }
 
                         <div class="form-group">
-                            <h6 class="form-control-label">
-                                @i. @question.Content
-                                <i class="fa-solid fa-pen text-info icon-edit"
+                            <div class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-3 text-sm">@i. @question.Content</h6>
+                                    @foreach (Answer ans in question.Answers)
+                                    {
+                                        <div class="form-check">
+                                            <span class="mb-2 text-xs">
+                                                <input class="form-check-input" type="checkbox" value="" @(ans.IsCorrect == true ? "checked" : "") disabled>
+                                                <label class="text-dark font-weight-bold ms-sm-2">@ans.Content</label>
+                                            </span>
+                                        </div>
+                                    }
+                                </div>
+
+
+                                
+                                @*<i class="fa-solid fa-pen text-info icon-edit"
                                    data-question-id="@question.QuestionId"
                                    data-question-content="@question.Content"
                                    data-question-score="@question.Score"
@@ -169,12 +193,27 @@
                                    data-question-marks="@marks"
                                    data-question-answers="@answers"></i>
                                 |
-                                <i class="fa-solid fa-trash text-danger" onclick="deleteQuestionById(@question.QuestionId, this)"></i>
-                            </h6>
+                                <i class="fa-solid fa-trash text-danger" onclick="deleteQuestionById(@question.QuestionId, this)"></i>*@
+                                <div class="ms-auto text-end">
+                                    <span class="btn btn-link text-dark px-3 mb-0 icon-edit" href="javascript:;"
+                                       data-question-id="@question.QuestionId"
+                                       data-question-content="@question.Content"
+                                       data-question-score="@question.Score"
+                                       data-question-answersId="@answersId"
+                                       data-question-marks="@marks"
+                                       data-question-answers="@answers">
+                                        <i class="fas fa-pencil-alt text-dark me-2" aria-hidden="true"></i>Edit
+                                    </span>
+                                    <span class="btn btn-link text-danger text-gradient px-3 mb-0" href="javascript:;"
+                                       onclick="deleteQuestionById(@question.QuestionId, this)">
+                                        <i class="far fa-trash-alt me-2"></i>Delete
+                                    </span>
+                                </div>
+                            </div>
                             @{
                                 i++;
                             }
-                            <div style="padding-left: 15px">
+                            @*<div style="padding-left: 15px">
                                 @foreach (Answer ans in question.Answers)
                                 {
                                     <div class="form-check">
@@ -182,8 +221,11 @@
                                         <label class="custom-control-label">@ans.Content</label>
                                     </div>
                                 }
-                            </div>
+                            </div>*@
                         </div>
+
+                        
+
                     }
                 </form>
             </div>

@@ -119,6 +119,8 @@ namespace QuizSystemApi.Dao
                     {
                         return false;
                     }
+                    List<TakeQuiz> takeQuizzes = context.TakeQuizzes.Where(x => x.QuizId == quiz.QuizId).ToList();
+                    context.TakeQuizzes.RemoveRange(takeQuizzes);
                     context.Quizzes.Remove(quiz);
                     context.SaveChanges();
                     return true;
