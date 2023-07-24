@@ -27,7 +27,7 @@
 
                         <div class="form-group">
                             <h6 class="form-control-label">
-                                @i. @question.Content
+                                @i. @question.Content<span style=" margin-left: 8px; " class="text-danger d-none">*Please choose at least 1 answer</span>
                             </h6>
                             @{
                                 i++;
@@ -69,4 +69,45 @@
 
     // Gán giá trị ngày giờ vào ô input
     document.getElementById('startAt').value = formattedDate;
+
+
+    // Function to handle form submission
+    function handleSubmit(event) {
+        event.preventDefault(); // Prevent the form from submitting by default
+
+        // Get all the form groups
+        const formGroups = document.querySelectorAll(".form-group");
+
+        // Variable to keep track of the overall form validity
+        let isFormValid = true;
+
+        formGroups.forEach((formGroup) => {
+            // Get all the checkboxes in each form group
+            const checkboxes = formGroup.querySelectorAll(".form-check-input");
+
+            // Get the span element inside each form group
+            const errorMsg = formGroup.querySelector(".text-danger");
+
+            // Check if at least one checkbox is checked in the form group
+            const isAnyCheckboxChecked = Array.from(checkboxes).some((checkbox) => checkbox.checked);
+
+            // Toggle the "d-none" class based on the checkbox status
+            if (isAnyCheckboxChecked) {
+                errorMsg.classList.add("d-none");
+            } else {
+                errorMsg.classList.remove("d-none");
+                isFormValid = false; // Set the form validity flag to false
+            }
+        });
+
+        // If the form is valid, submit it
+        if (isFormValid) {
+            const form = event.target.closest("form"); // Find the parent form of the submit button
+            form.submit(); // Submit the form
+        }
+    }
+
+    // Attach the event listener to the form submit button
+    const submitButton = document.querySelector(".btn[type='submit']");
+    submitButton.addEventListener("click", handleSubmit);
 </script>

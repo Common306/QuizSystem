@@ -2,8 +2,7 @@
     ViewData["Title"] = "Review Quiz";
 
     ViewData["SubTitle"] = "Review Quiz";
-    ViewData["ManageQuiz"] = "active";
-
+    ViewData["History"] = "active";
     Layout = "_Layout";
 }
 <div class="row">
@@ -11,7 +10,7 @@
         <div class="card p-4">
             @if (ViewBag.user.RoleId == 3)
             {
-                <a class="mb-3 form-control-label text-primary" href="../../quiz/quizzes"><i class="ni ni-bold-left"></i> Back</a>
+                <a class="mb-3 form-control-label text-primary" href="../../quiz/history"><i class="ni ni-bold-left"></i> Back</a>
             }
             else
             {

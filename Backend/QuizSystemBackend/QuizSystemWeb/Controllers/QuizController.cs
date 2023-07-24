@@ -114,6 +114,51 @@ namespace QuizSystemWeb.Controllers
             }
 
         }
+        [Route("history")]
+        public async Task<IActionResult> History(string search)
+        {
+            try
+            {
+                string? token = Request.Cookies["Token"];
+                User user = GetUserFromToken(token);
+                if (token == null)
+                {
+                    return Unauthorized();
+                }
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                HttpResponseMessage response = await client.GetAsync(QuizApiUrl + "/student");
+                string strData = await response.Content.ReadAsStringAsync();
+
+                var options = new JsonSerializerOptions
+                {
+                    PropertyNameCaseInsensitive = true
+                };
+                List<Quiz>? quizzes = JsonSerializer.Deserialize<List<Quiz>>(strData, options);
+                response = await client.GetAsync(TakeQuizApiUrl);
+                strData = await response.Content.ReadAsStringAsync();
+                List<TakeQuiz>? takeQuizzes = JsonSerializer.Deserialize<List<TakeQuiz>>(strData, options);
+                ViewBag.takeQuizzes = takeQuizzes;
+                ViewBag.user = user;
+                if (search != null)
+                {
+                    List<Quiz> filteredQuizzes = new List<Quiz>();
+                    foreach (var quiz in quizzes)
+                    {
+                        if (quiz.Title.ToLower().Contains(search.Trim().ToLower()) || quiz.Creator.FullName.ToLower().Contains(search.Trim().ToLower()))
+                        {
+                            filteredQuizzes.Add(quiz);
+                        }
+                    }
+                    return View(filteredQuizzes);
+                }
+                return View(quizzes);
+            }
+            catch (Exception ex)
+            {
+                return Unauthorized();
+            }
+
+        }
         [HttpGet]
         [Route("details/{id}")]
         public async Task<IActionResult> Details(int id)

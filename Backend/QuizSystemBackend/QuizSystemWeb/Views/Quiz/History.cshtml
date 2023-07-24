@@ -2,9 +2,9 @@
 @{
     ViewData["Title"] = "Manage Quiz";
     ViewData["FormSearch"] = "true";
-    ViewData["FormSearchAction"] = "Quizzes";
+    ViewData["FormSearchAction"] = "History";
     ViewData["SubTitle"] = "Manage Quiz";
-    ViewData["QuizList"] = "active";
+    ViewData["History"] = "active";
     ViewData["Controller"] = "Quiz";
     Layout = "_Layout";
 }
@@ -28,6 +28,7 @@
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Start</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">End</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Pass score</th>
+                                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Score</th>
                                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Creator</th>
                                 <th class="text-secondary opacity-7"></th>
                             </tr>
@@ -35,54 +36,50 @@
                         <tbody">
                         @foreach (var quiz in Model)
                         {
-                            bool isDone = false;
                             @foreach (var item in ViewBag.takeQuizzes)
                             {
                                 if (item.QuizId == quiz.QuizId && ViewBag.user.UserId == item.UserId)
                                 {
-                                    isDone = true;
+                                        <tr>
+                                            <td class="align-middle text-sm">
+                                                <p class="text-xs font-weight-bold mb-0 ps-3">@quiz.QuizId</p>
+                                            </td>
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">@quiz.Title</p>
+                                            </td>
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">@quiz.Description</p>
+                                            </td>
+                                            <td class="align-middle">
+                                                <span class="text-secondary text-xs font-weight-bold">@quiz.StartAt</span>
+                                            </td>
+                                            <td class="align-middle">
+                                                <span class="text-secondary text-xs font-weight-bold">@quiz.EndAt</span>
+                                            </td>
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">@quiz.PassScore</p>
+                                            </td>
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">@item.Score</p>
+                                            </td>
+                                            <td>
+                                                <p class="text-xs font-weight-bold mb-0">@quiz.Creator.FullName</p>
+                                            </td>
+                                            <td class="align-middle">
+                                            @foreach (var item1 in ViewBag.takeQuizzes)
+                                            {
+                                                if (item1.QuizId == quiz.QuizId && ViewBag.user.UserId == item1.UserId)
+                                                {
+                                                        <a href="../quiz/review/@item1.TakeQuizId" class="text-info font-weight-bold text-xs" data-toggle="tooltip">
+                                                            Review
+                                                        </a>
+                                                }
+                                            }
+                                            </td>
+                                        </tr>
                                 }
                             }
-                            if (!isDone)
-                            {
-                                    <tr>
-                                        <td class="align-middle text-sm">
-                                            <p class="text-xs font-weight-bold mb-0 ps-3">@quiz.QuizId</p>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">@quiz.Title</p>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">@quiz.Description</p>
-                                        </td>
-                                        <td class="align-middle">
-                                            <span class="text-secondary text-xs font-weight-bold">@quiz.StartAt</span>
-                                        </td>
-                                        <td class="align-middle">
-                                            <span class="text-secondary text-xs font-weight-bold">@quiz.EndAt</span>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">@quiz.PassScore</p>
-                                        </td>
-                                        <td>
-                                            <p class="text-xs font-weight-bold mb-0">@quiz.Creator.FullName</p>
-                                        </td>
-                                        <td class="align-middle">
-                                        @if (quiz.QuizCode == null)
-                                        {
-                                                <a href="../question/doQuiz?quizId=@quiz.QuizId" class="text-info font-weight-bold text-xs" data-toggle="tooltip">
-                                                    Take quiz
-                                                </a>
-                                        }
-                                        else
-                                        {
-                                                <a href="#" onclick="openPasswordConfirmation(@quiz.QuizCode, '../question/doQuiz?quizId=@quiz.QuizId')" class="text-info font-weight-bold text-xs" data-toggle="tooltip">
-                                                    Take quiz
-                                                </a>
-                                        }
-                                        </td>
-                                    </tr>
-                            }
+
                         }
                             </tbody>
                     </table>
@@ -106,7 +103,7 @@
 
             <!-- Nội dung của popup -->
             <div class="modal-body">
-                <p>Please enter quiz Password to continue:</p>
+                <p>Please enter quiz password to continue:</p>
                 <input type="password" id="passwordInput" class="form-control">
             </div>
 
