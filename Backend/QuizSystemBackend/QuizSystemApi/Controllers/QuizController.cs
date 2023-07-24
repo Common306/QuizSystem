@@ -113,7 +113,10 @@ namespace QuizSystemApi.Controllers
             List<Quiz> quizzes = new List<Quiz>();
             foreach (var item in quizzesRaw)
             {
-                if(item.StartAt <= currentUtcDateTime && item.EndAt >= currentUtcDateTime)
+                if ((item.StartAt <= currentUtcDateTime && item.EndAt >= currentUtcDateTime)
+                    || (item.StartAt <= currentUtcDateTime && item.EndAt == null)
+                    || (item.EndAt >= currentUtcDateTime && item.StartAt == null)
+                    || (item.StartAt == null || item.EndAt == null))
                 {
                     quizzes.Add(item);
                 }
