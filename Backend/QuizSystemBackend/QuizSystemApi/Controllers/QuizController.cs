@@ -22,7 +22,8 @@ namespace QuizSystemApi.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll(string? search, int? page) {
+        public IActionResult GetAll(string? search, int? page)
+        {
             User user = TokenHelper.GetUserFromToken(HttpContext);
             List<Quiz> quizzes = _quizRepository.GetAll(user, search, page);
             int total = _quizRepository.Total(user, search);
@@ -95,7 +96,8 @@ namespace QuizSystemApi.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("review/{id}")]
-        public IActionResult ReviewQuiz(int id) {
+        public IActionResult ReviewQuiz(int id)
+        {
             User user = TokenHelper.GetUserFromToken(HttpContext);
             ReviewQuizDtoResponse result = _quizRepository.ReviewQuiz(id, user);
             return Ok(result);
@@ -106,7 +108,16 @@ namespace QuizSystemApi.Controllers
         [Route("student")]
         public IActionResult GetAllForStudent()
         {
-            List<Quiz> quizzes = _quizRepository.GetAll();
+            DateTime currentUtcDateTime = DateTime.Now;
+            List<Quiz> quizzesRaw = _quizRepository.GetAll();
+            List<Quiz> quizzes = new List<Quiz>();
+            foreach (var item in quizzesRaw)
+            {
+                if(item.StartAt <= currentUtcDateTime && item.EndAt >= currentUtcDateTime)
+                {
+                    quizzes.Add(item);
+                }
+            }
             return Ok(quizzes);
         }
 
